@@ -1,11 +1,20 @@
 import React from "react"
 import { Event } from "../utils/types"
+import EventItem from "./eventitem"
 
 type ItemListProps = {
   events: Event[]
 }
 
 const EventList = ({ events }: ItemListProps) => {
+  return (
+    <div className="flex-1 overflow-y-scroll">
+      <div className="max-w-4xl mx-auto px-4 py-2">
+        {events.map(event => (<EventItem event={event} />))}
+      </div>
+    </div>
+  )
+
   return (
     <div className="bg-white rounded-t-lg overflow-hidden border border-solid border-gray-400">
       <table className="table-auto w-full">

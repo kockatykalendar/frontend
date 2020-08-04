@@ -15,12 +15,10 @@ type LayoutProps = {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <>
+    <div className="antialiased max-h-screen h-screen flex flex-col">
       <Header />
-      <div className="max-w-screen-lg px-5 py-4 mx-auto">
-        <main>{children}</main>
-      </div>
-    </>
+      {children}
+    </div>
   )
 }
 

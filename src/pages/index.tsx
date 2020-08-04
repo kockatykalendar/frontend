@@ -3,6 +3,7 @@ import React from "react"
 import EventList from "../components/eventlist"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
+import Calendar from "../components/calendar"
 
 const IndexPage = () => {
   const query = useStaticQuery(graphql`
@@ -12,6 +13,7 @@ const IndexPage = () => {
           id
           name
           sciences
+          type
           date {
             start
             end
@@ -32,7 +34,10 @@ const IndexPage = () => {
   return (
     <Layout>
       <SEO title="Home" />
-      <EventList events={query.allYaml.nodes} />
+      <div className="flex overflow-hidden flex-col md:flex-row flex-grow">
+        <Calendar />
+        <EventList events={query.allYaml.nodes} />
+      </div>
     </Layout>
   )
 }
