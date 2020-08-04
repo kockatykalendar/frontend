@@ -1,4 +1,5 @@
 import React from "react"
+import { ArrowLeft, ArrowRight, Filter } from "react-feather"
 
 const Calendar = () => {
   return (
@@ -6,12 +7,12 @@ const Calendar = () => {
 
       <div className="px-4 md:px-6 flex items-center justify-between md:py-2 flex-row flex-wrap text-gray-700">
         <div className="flex-1">
-          <i data-feather="arrow-left"></i>
+          <ArrowLeft />
         </div>
         <h2 className="text-xl text-center font-bold flex-shrink-0">Január 2020</h2>
         <div className="flex flex-1 justify-end">
-          <i data-feather="filter" className="mr-2 md:hidden"></i>
-          <i data-feather="arrow-right"></i>
+        	<Filter className="mr-2 md:hidden" />
+          <ArrowRight />
         </div>
       </div>
 
