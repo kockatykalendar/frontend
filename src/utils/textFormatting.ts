@@ -1,5 +1,6 @@
 import { Event } from "./types"
 import { schoolTypeTexts } from "../constants"
+import { format } from "date-fns"
 
 function formatSchoolType(schoolType: string) {
   // @ts-ignore
@@ -39,20 +40,16 @@ export function formatContestants(event: Event) {
 
 export function formatDates(event: Event) {
   // TODO: add tests
-  // TODO: consider using date-fns to format dates.
 
-  let datesForHuman = ""
   if (event.date.text) {
-    datesForHuman = event.date.text
-  } else {
-    let date = new Date(event.date.start)
-    datesForHuman = date.getDate() + ". " + (date.getMonth() + 1) + "."
-
-    if (event.date.end) {
-      date = new Date(event.date.end)
-      datesForHuman +=
-        " – " + date.getDate() + ". " + (date.getMonth() + 1) + "."
-    }
+    return event.date.text
   }
-  return datesForHuman
+
+  if (event.date.end) {
+    return `${format(new Date(event.date.start), "d. M.")} – ${format(
+      new Date(event.date.end),
+      "d. M."
+    )}`
+  }
+  return format(new Date(event.date.start), "d. M.")
 }
