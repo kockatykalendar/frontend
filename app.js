@@ -33,12 +33,12 @@ const load_data = () => {
 	xhr.send()
 
 	xhr.onload = function() {
-	  DATA = xhr.response
-	  DATA.sort((a, b) => {
-	  	return new Date(a.date.start) - new Date(b.date.start)
-	  })
+		DATA = xhr.response
+		DATA.sort((a, b) => {
+			return new Date(a.date.start) - new Date(b.date.start)
+		})
 
-	  render()
+		render()
 	}
 }
 
