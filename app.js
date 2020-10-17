@@ -37,8 +37,8 @@ const DROPDOWN_CLASSES = {
 const DATA_URL = 'https://raw.githubusercontent.com/kockatykalendar/data/master/build/2019_20.json'
 let DATA = []
 let FILTER = {
-	school: false,
-	sciences: [],
+	schools: ["zs","ss"],
+	sciences: ["mat","fyz","inf","other"],
 }
 
 const load_data = () => {
@@ -118,22 +118,24 @@ const list_render = () => {
 	let visible_events = DATA
 
 	// School filter
-	if (FILTER.school) {
+	if (FILTER.schools.length != 0) {
 		visible_events = visible_events.filter((event) => {
-			return (event.contestants.min.substr(0, 2) == FILTER.school || event.contestants.max.substr(0, 2) == FILTER.school)
+			let ans = false;
+			FILTER.schools.forEach(school => {
+				if (event.contestants.min.substr(0, 2) == school || event.contestants.max.substr(0, 2) == school) ans = true;
+			})
+			return ans;
 		})
 	}
 
 	// Sciences filter
 	if (FILTER.sciences.length != 0) {
 		visible_events = visible_events.filter((event) => {
-			for (let i = FILTER.sciences.length - 1; i >= 0; i--) {
-				if (event.sciences.indexOf(FILTER.sciences[i]) === -1) {
-					return false
-				}
-			}
-
-			return true
+			let ans = false;
+			FILTER.sciences.forEach(science => {
+				if (event.sciences.includes(science)) ans = true;
+			})
+			return ans;
 		})
 	}
 
@@ -150,72 +152,12 @@ const list_render = () => {
 feather.replace()
 load_data()
 
-// FILTERS
-const dropdown_onclick = (e) => {
-	let menu = e.currentTarget.parentElement.querySelector('.js-dropdown-menu')
+document.getElementById('dropdown-sciences').addEventListener('change', (e) => {
+  FILTER.sciences = [ ...e.target.options].filter( o => o.selected).map(o => o.value)
+  list_render()
+});
 
-	if (menu.classList.contains('hidden')) {
-		dropdown_hide()
-		menu.classList.remove('hidden')
-	} else {
-		menu.classList.add('hidden')
-	}
-}
-document.querySelectorAll('.js-dropdown-button').forEach((elem) => elem.onclick = dropdown_onclick)
-
-const dropdown_hide = () => {
-	document.querySelectorAll('.js-dropdown-menu').forEach((elem) => elem.classList.add('hidden'))
-}
-
-const dropdown_set_active = (elem, active) => {
-	if (active) {
-		DROPDOWN_CLASSES.off.forEach((cls) => elem.classList.remove(cls))
-		DROPDOWN_CLASSES.on.forEach((cls) => elem.classList.add(cls))
-	} else {
-		DROPDOWN_CLASSES.on.forEach((cls) => elem.classList.remove(cls))
-		DROPDOWN_CLASSES.off.forEach((cls) => elem.classList.add(cls))
-	}
-}
-
-document.getElementById('dropdown-school').querySelectorAll('li').forEach((elem) => elem.onclick = (event) => {
-	let school = event.currentTarget.dataset.school
-
-	if (FILTER.school == school) {
-		dropdown_set_active(event.currentTarget, false)
-		FILTER.school = false
-	} else {
-		document.querySelectorAll('#dropdown-school li').forEach((elem) => dropdown_set_active(elem, false))
-		dropdown_set_active(event.currentTarget, true)
-		FILTER.school = school
-	}
-
-	dropdown_hide()
-	document.querySelector('#dropdown-school .js-dropdown-button span').innerHTML = LANG.contestant_types[FILTER.school] || "(všetky školy)"
-	list_render()
-})
-
-document.getElementById('dropdown-sciences').querySelectorAll('li').forEach((elem) => elem.onclick = (event) => {
-	let science = event.currentTarget.dataset.science
-
-	if (FILTER.sciences.indexOf(science) !== -1) {
-		dropdown_set_active(event.currentTarget, false)
-		FILTER.sciences = FILTER.sciences.filter((x) => x != science)
-	} else {
-		dropdown_set_active(event.currentTarget, true)
-		FILTER.sciences.push(science)
-	}
-
-	dropdown_hide()
-
-	let display = ''
-	if (FILTER.sciences.length == 0) {
-		display = '(všetky vedy)'
-	} else if (FILTER.sciences.length == 1) {
-		display = LANG.sciences[FILTER.sciences[0]]
-	} else {
-		display = FILTER.sciences.map((x) => LANG.sciences_short[x]).join(', ')
-	}
-
- 	document.querySelector('#dropdown-sciences .js-dropdown-button span').innerHTML = display
- 	list_render()
-})
+document.getElementById('dropdown-school').addEventListener('change', (e) => {
+  FILTER.schools = [ ...e.target.options].filter( o => o.selected).map(o => o.value)
+  list_render()
+});

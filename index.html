@@ -177,35 +177,19 @@
             <i data-feather="filter" class="mr-2"></i> Filter:
           </div>
 
-          <div class="relative js-dropdown" id="dropdown-school">
-            <button class="js-dropdown-button flex bg-white border px-3 rounded-md py-1 text-black mr-2 focus:shadow-outline focus:border-blue-500 focus:bg-gray-400">
-              <span>(všetky školy)</span>
-              <i data-feather="chevron-down" class="w-4 ml-1"></i>
-            </button>
+          <select multiple style="height: 65px" class="js-dropdown-menu overflow-hidden py-2 px-2 -mb-1 mt-1 bg-white border border-gray-500 rounded-md shadow-md" id="dropdown-school">
+            <option class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" value="zs" selected>Základná škola</option>
+            <option class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" value="ss" selected>Stredná škola</option>
+          </select>
 
-            <div class="js-dropdown-menu hidden absolute mt-1 bg-white border border-gray-500 rounded-md shadow-md">
-              <ul class="py-2 px-2 -mb-1">
-                <li class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" data-school="zs">Základná škola</li>
-                <li class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" data-school="ss">Stredná škola</li>
-              </ul>
-            </div>
-          </div>
+          <select multiple style="height: 116px" class="js-dropdown-menu overflow-hidden py-2 px-2 -mb-1 mt-1 bg-white border border-gray-500 rounded-md shadow-md" id="dropdown-sciences">
+            <option class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" value="mat" selected>Matematika</option>
+            <option class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" value="fyz" selected>Fyzika</option>
+            <option class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" value="inf" selected>Informatika</option>
+            <option class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" value="other" selected>Ostatné</option>
+          </select>
 
-          <div class="relative js-dropdown" id="dropdown-sciences">
-            <button class="js-dropdown-button flex bg-white border px-3 rounded-md py-1 text-black mr-2 focus:shadow-outline focus:border-blue-500 focus:bg-gray-400">
-              <span>(všetky vedy)</span>
-              <i data-feather="chevron-down" class="w-4 ml-1"></i>
-            </button>
 
-            <div class="js-dropdown-menu hidden absolute mt-1 bg-white border border-gray-500 rounded-md shadow-md">
-              <ul class="py-2 px-2 -mb-1">
-                <li class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" data-science="mat">Matematika</li>
-                <li class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" data-science="fyz">Fyzika</li>
-                <li class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" data-science="inf">Informatika</li>
-                <li class="whitespace-no-wrap py-1 px-3 rounded-md mb-1 text-black hover:bg-blue-500 hover:text-white" data-science="other">Ostatné</li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
 
