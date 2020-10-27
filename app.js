@@ -140,6 +140,7 @@ const render = () => {
 			node.parentElement.classList.toggle("close")
 		})
 	})
+
 }
 
 const insert_event = (node, color) => {
