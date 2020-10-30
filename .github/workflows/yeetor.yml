@@ -26,6 +26,8 @@ jobs:
       - name: Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
         run: npx tailwindcss build tailwind/tailwindStyles.css -c tailwind/tailwind.config.prod.js | npx clean-css-cli > tailwind/tailwind.css
 
+      - name: tell me more 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+          run: ls -lah tailwind/tailwind.css
       # Runs the Super-Linter action
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
