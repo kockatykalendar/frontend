@@ -34,3 +34,4 @@ jobs:
           FOLDER: . # The folder the action should deploy.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CLEAN: true # Automatically remove deleted files from the deploy branch
+          SINGLE_COMMIT: true
