@@ -282,8 +282,8 @@ const setup_calendar = () => {
 
 		// Load from data
 		visible_events.forEach(event => {
-			let d = event.calendar.split("-").reverse().join("-")
-			d = jsCalendar.tools.stringToDate(d)
+			let d = event.date.end ? event.date.end : event.date.start
+			d = new Date(d.split("-").reverse().join("-"))
 			if (d.getTime() === date.getTime()) {
 				insert_event(event_container, event.color)
 			}
