@@ -37,7 +37,7 @@ const LANG = {
 	}
 }
 
-const DATA_URL = 'https://raw.githubusercontent.com/kockatykalendar/data/master/build/2019_20.json'
+const DATA_URL = 'https://raw.githubusercontent.com/kockatykalendar/data/gh-pages/2019_20.json'
 let DATA = []
 let FILTER = {
 	school: ['zs', 'ss'],
