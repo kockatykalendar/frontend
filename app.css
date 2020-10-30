@@ -187,6 +187,7 @@
   100% { transform: rotate(360deg); }
 }
 /* END SPINNER STYLES*/
+/* BEGIN SLIDER STYLES*/
 
 .slider:before {
     position: absolute;
@@ -235,3 +236,4 @@ input:checked + .slider:before {
   -ms-transform: translateX(1rem);
   transform: translateX(1rem);
 }
+/* END SLIDER STYLES*/
