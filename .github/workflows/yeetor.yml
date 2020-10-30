@@ -32,7 +32,7 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
-          BRANCH: pages
+          BRANCH: gh-pages
           FOLDER: . # The folder the action should deploy.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SINGLE_COMMIT: true
