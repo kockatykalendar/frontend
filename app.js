@@ -15,9 +15,11 @@ const CONSTANTS = {
 		'trojsten': 'Trojsten',
 		'p-mat': 'P-mat',
 		'sezam': 'SEZAM',
-		'riesky': 'Riešky',	
+		'riesky': 'Riešky',
 		'strom': 'Strom',
-		'siov': 'ŠIOV',		
+		'siov': 'ŠIOV',
+		'iuventa': 'Iuventa',
+		'matfyz': 'FMFI UK',
 	},
 	contestant_types: {
 		'zs': 'ZŠ',
@@ -47,13 +49,15 @@ const CONSTANTS = {
 		'trojsten': 'logos/trojsten.svg',
 		'p-mat': 'logos/p-mat.svg',
 		'sezam': 'logos/sezam.svg',
-		'riesky': 'logos/riesky.svg',
+		'riesky': 'logos/riesky.png',
 		'strom': 'logos/strom.svg',
 		'siov': 'logos/siov.svg',
+		'iuventa': 'logos/iuventa.svg',
+		'matfyz': 'logos/matfyz.png',
 	}
 }
 
-const DATA_URL = 'https://raw.githubusercontent.com/kockatykalendar/data/gh-pages/2019_20.json'
+const DATA_URL = 'https://raw.githubusercontent.com/kockatykalendar/data/gh-pages/2020_21.json'
 let DATA = []
 let FILTER = {
 	school: ['zs', 'ss'],
@@ -65,7 +69,15 @@ const CALENDAR = jsCalendar.new({
 	firstDayOfTheWeek: "2",
 	monthFormat: "month YYYY",
 	language : "sk"
-}) 
+})
+
+const open_modal = () => {
+	document.getElementById("filter-modal").style.display = "block"
+}
+
+const close_modal = () => {
+	document.getElementById("filter-modal").style.display = "none"
+}
 
 const load_data = () => {
 	let xhr = new XMLHttpRequest()
@@ -148,7 +160,7 @@ const fmt = {
 
 	background_color: function(event) {
 		const date_end = new Date(event.date.end || event.date.start)
-		return date_end < new Date() ? 'opacity-50 hover:opacity-100 transition-opacity duration-200 ease-in-out' : ''
+		return date_end <= new Date() ? 'opacity-50 hover:opacity-100 transition-opacity duration-200 ease-in-out' : ''
 	},
 }
 
@@ -164,7 +176,8 @@ const render = () => {
 
 	// School filter
 	visible_events = visible_events.filter((event) => {
-		return (FILTER.school.indexOf(event.contestants.min.substr(0, 2)) !== -1 || FILTER.school.indexOf(event.contestants.max.substr(0, 2)) !== -1)
+		return FILTER.school.indexOf(event.contestants.min.substr(0, 2)) !== -1 
+			|| !event.contestants.max || FILTER.school.indexOf(event.contestants.max.substr(0, 2)) !== -1
 	})
 
 	// Sciences filter
@@ -201,6 +214,10 @@ const render = () => {
 		event.sciences = fmt.sciences(event)
 	})
 
+	visible_events.sort(function(a,b){
+		return new Date(b.date.end || b.date.start) - new Date(a.date.end || a.date.start);
+	});
+
 	event_list.innerHTML = Mustache.render(TEMPLATE, {data: visible_events}, {partial : PARTIAL_TEMPLATE});
 
 	[...document.getElementsByClassName("js-event-header")].forEach(node => {
@@ -208,22 +225,21 @@ const render = () => {
 			node.parentElement.querySelector(".js-event-description").classList.toggle("hidden")
 			node.querySelector(".js-event-icons").classList.toggle("hidden")
 		})
-	})
+	}) 
 
-	const currentEventId = `event-item-${visible_events.find(event => 
-		new Date(event.date.end || event.date.start) > new Date()
-	).id}`
-	document.getElementById('scroll').scrollTo({
-		top: document.getElementById(currentEventId).getBoundingClientRect().top - 200,
-		left: 0,
-		behavior: 'smooth'
-	})
+	const event = visible_events.reverse().find(event => 
+		new Date(event.date.end || event.date.start) >= new Date()
+	)
+	if (event) {
+		scroll_to_id(`event-item-${event.id}`)
+	}
 }
 
 const insert_event = (node, color) => {
 	let event_dot = document.createElement("div")
-	event_dot.setAttribute("class", "w-2 h-2 rounded-full mr-1 mb-1")
+	event_dot.setAttribute("class", "w-2 h-2 rounded-full")
 	event_dot.style.backgroundColor = color
+	event_dot.style.margin = ".1rem"
 	node.appendChild(event_dot)
 }
 
@@ -249,6 +265,7 @@ const setup_calendar = () => {
 			let filter = icon.cloneNode()
 			filter.setAttribute("class", "calendar-filter mx-10 my-8")
 			filter.innerHTML = '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>';
+			filter.addEventListener("click", open_modal)
 			element.parentElement.getElementsByClassName("jsCalendar-title-right")[0].appendChild(filter)
 			//right arrow
 			let right_arrow = icon.cloneNode()
@@ -278,25 +295,36 @@ const setup_calendar = () => {
 		// Insert event container
 		let event_container = document.createElement("div")
 		event_container.setAttribute("class", "flex justify-center -mr-1 flex-wrap")
+		event_container.style.maxHeight = "20px";
 		element.appendChild(event_container)
 
 		// Load from data
 		visible_events.forEach(event => {
-			let d = event.date.end ? event.date.end : event.date.start
-			d = new Date(d.split("-").reverse().join("-"))
-			if (d.getTime() === date.getTime()) {
+			// 3 hour 
+			if (Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(event.date.end || event.date.start).getTime()) <= 60000 * 60 * 3) {
 				insert_event(event_container, event.color)
 			}
 		});
 	});
 
 	CALENDAR.onDateClick(function(event, date){
-		// TODO: scroll to events around clicked date
-		// Test:
-		document.getElementById("scroll").scrollTo(0, 5000)
-		// maybe add smooth scroll
+		// Scroll to events around clicked date
+		const e = visible_events.find(event => 
+			Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(event.date.end || event.date.start).getTime()) <= 60000 * 60 * 3
+		)
+		if (e) {
+			scroll_to_id(`event-item-${e.id}`)			
+		}
 	});
 	CALENDAR.refresh()
+}
+
+const scroll_to_id = (id) => {
+	document.getElementById('scroll').scrollTo({
+		top: document.getElementById(id).getBoundingClientRect().top - window.innerHeight / 2 + document.getElementById('scroll').scrollTop,
+		left: 0,
+		behavior: 'smooth'
+	})
 }
 
 feather.replace()
@@ -333,11 +361,8 @@ document.querySelectorAll('.js-filter-checkbox').forEach((elem) => elem.onchange
 	load_data()
 })
 
-
-const open_modal = () => {
-	document.getElementById("filter-modal").style.display = 'block'
-}
-
-const close_modal = () => {
-	document.getElementById("filter-modal").style.display = 'none'
-}
+window.addEventListener("keydown", e => {
+	if(!e.isComposing && e.keyCode === 27){
+		close_modal()
+	}
+})
