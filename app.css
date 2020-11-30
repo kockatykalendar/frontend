@@ -1,15 +1,5 @@
 /* BEGIN CALENDAR STYLES */
 
-@media (min-width: 768px) {
-  aside {
-    width: 22.125rem;
-  }
-
-  .calendar-filter {
-		display: none;
-	}
-}
-
 .jsCalendar.kk {
   margin: 0;
   padding: 0;
@@ -132,10 +122,6 @@
 .jsCalendar.kk tbody td.jsCalendar-next,
 .jsCalendar.kk tbody td.jsCalendar-previous {
   color: rgba(74,85,104,0.2);
-}
-
-.calendar-filter {
-	margin: 10px 8px;
 }
 
 .jsCalendar-nav-right, .jsCalendar-nav-left {

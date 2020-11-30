@@ -267,8 +267,9 @@ const setup_calendar = () => {
 			// Setup arrows & filter
 			//filter icon
 			let filter = icon.cloneNode()
-			filter.setAttribute("class", "calendar-filter mx-10 my-8")
-			filter.innerHTML = '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>';
+			filter.setAttribute("class", "md:hidden")
+			filter.setAttribute("style", "margin: 10px 8px;")	// We can't use tailwind, because .jsCalendar * sets everything to 0 and takes precedence.
+			filter.innerHTML = '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>'
 			filter.addEventListener("click", open_modal)
 			element.parentElement.getElementsByClassName("jsCalendar-title-right")[0].appendChild(filter)
 			//right arrow
