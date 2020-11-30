@@ -299,7 +299,7 @@ const setup_calendar = () => {
 
 		// Insert event container
 		let event_container = document.createElement("div")
-		event_container.setAttribute("class", "flex justify-center -mr-1 flex-wrap")
+		event_container.setAttribute("class", "flex justify-center flex-wrap")
 		event_container.style.maxHeight = "20px";
 		element.appendChild(event_container)
 
