@@ -9,6 +9,25 @@
 }
 
 
+/* ---- SPINNER ---- */
+.spinner {
+	border-width: 20px;
+	border-top-color: #4299e1;
+	-webkit-animation: spinner-animation 1.5s linear infinite;
+	animation: spinner-animation 1.5s linear infinite;
+}
+
+@-webkit-keyframes spinner-animation {
+	0% { -webkit-transform: rotate(0deg); }
+	100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spinner-animation {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+
 /* ---- TOOLTIPS ---- */
 .tooltip::after {
 	display: none;
