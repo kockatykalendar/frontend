@@ -332,7 +332,6 @@ const scroll_to_id = (id) => {
 	})
 }
 
-feather.replace()
 load_data()
 setup_calendar()
 
