@@ -22,8 +22,11 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Install tailwind
+        run: cd tailwind && npm install tailwindcss@1.9.6 --no-save
+
       - name: Build 🔧
-        run: cd tailwind && npx tailwindcss-cli build tailwind.css -c tailwind.config.prod.js | npx clean-css-cli > app.css
+        run: cd tailwind && npx tailwindcss build tailwind.css -c tailwind.config.prod.js | npx clean-css-cli > app.css
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
