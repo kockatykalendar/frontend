@@ -131,8 +131,8 @@ const fmt = {
 		let min_type = event.contestants.min.substr(0, 2)
 		let min_year = event.contestants.min.substr(2)
 
-		let max_type = ""
-		let max_year = ""
+		let max_type = ''
+		let max_year = ''
 		if (event.contestants.max) {
 			max_type = event.contestants.max.substr(0, 2)
 			max_year = event.contestants.max.substr(2)
@@ -206,7 +206,7 @@ const render = () => {
 		}
 
 		// Ostatni organizatori
-		if (FILTER.organizers.indexOf("*") !== -1) {
+		if (FILTER.organizers.indexOf('*') !== -1) {
 			if (event.organizers.length === 0) { return true }
 			for (let i = event.organizers.length - 1; i >= 0; i--) {
 				if (FILTER.default_organizers.indexOf(event.organizers[i]) === -1) {
