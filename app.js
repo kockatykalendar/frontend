@@ -83,6 +83,17 @@ const close_modal = () => {
 	document.getElementById("filter-modal").style.display = "none"
 }
 
+const sorting_key = (event) => {
+	if (event.date.end) {
+		return Math.min(
+			new Date(event.date.end),
+			Math.max(new Date(event.date.start), new Date())
+		)
+	}
+
+	return new Date(event.date.start)
+}
+
 const load_data = () => {
 	let xhr = new XMLHttpRequest()
 	xhr.open('GET', DATA_URL)
@@ -92,7 +103,7 @@ const load_data = () => {
 	xhr.onload = function() {
 		DATA = xhr.response
 		DATA.sort((a, b) => {
-			return new Date(a.date.start) - new Date(b.date.start)
+			return sorting_key(a) - sorting_key(b)
 		})
 
 		render()
