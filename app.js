@@ -102,6 +102,15 @@ const load_data = () => {
 
 	xhr.onload = function() {
 		DATA = xhr.response
+
+		DATA.forEach((event, index) => {
+			for (const key in fmt) {
+				if (fmt.hasOwnProperty(key)) {
+					event[key] = fmt[key](event)
+				}
+			}
+		})
+
 		DATA.sort((a, b) => {
 			return sorting_key(a) - sorting_key(b)
 		})
@@ -234,14 +243,6 @@ const render = () => {
 
 	visible_events.forEach((event, index) => {
 		event.id = index
-		event.color = fmt.color(event)
-		event.places = fmt.places(event)
-		event.background_color = fmt.background_color(event)
-		event.date_verbose = fmt.date_verbose(event)
-		event.type = fmt.type(event)
-		event.organizers = fmt.organizers(event)
-		event.contestants = fmt.contestants(event)
-		event.sciences = fmt.sciences(event)
 	})
 
 	event_list.innerHTML = Mustache.render(TEMPLATE, {data: visible_events}, {partial : PARTIAL_TEMPLATE});
