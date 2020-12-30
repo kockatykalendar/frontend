@@ -244,10 +244,6 @@ const render = () => {
 		event.sciences = fmt.sciences(event)
 	})
 
-	visible_events.sort(function(a,b){
-		return new Date(a.date.end || a.date.start) - new Date(b.date.end || b.date.start)
-	})
-
 	event_list.innerHTML = Mustache.render(TEMPLATE, {data: visible_events}, {partial : PARTIAL_TEMPLATE});
 
 	[...document.getElementsByClassName("js-event-header")].forEach(node => {
