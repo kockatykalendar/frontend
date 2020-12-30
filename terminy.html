@@ -221,12 +221,17 @@
 
 
   <script id="template-event-item" type="x-tmpl-mustache">
-    <section class="py-4 px-8 {{ background_color }}" id="event-item-{{ id }}">
+    <section class="py-4 px-8 {{ background_color }} {{#is_active}}bg-orange-100{{/is_active}}" id="event-item-{{ id }}">
       <header class="flex items-center js-event-header">
         <div class="rounded-full w-6 h-6 flex-shrink-0 mr-3" style="background: {{ color }};"></div>
         <div class="w-full">
           <div class="flex flex-wrap justify-between text-gray-600 text-sm md:mr-5">
-            <div>{{ date_verbose }}</div>
+            <div>
+              {{#is_active}}
+              <span class="bg-orange-600 text-white font-bold text-xs px-2 rounded mr-1">Prebieha</span>
+              {{/is_active}}
+              {{ date_verbose }}
+            </div>
             <div>
               {{#pretty_organizers}}
               <img class="ml-4 h-4 inline" alt="{{ name }}" src="{{ logo }}" />
