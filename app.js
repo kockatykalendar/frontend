@@ -112,6 +112,9 @@ const load_data = () => {
 		})
 
 		DATA.sort((a, b) => {
+			if (a.is_active && b.is_active) {
+				return new Date(a.date.start) - new Date(b.date.start)
+			}
 			return sorting_key(a) - sorting_key(b)
 		})
 
@@ -190,6 +193,18 @@ const fmt = {
 		const date_end = new Date(event.date.end || event.date.start)
 		return date_end <= new Date() ? 'opacity-50 hover:opacity-100 transition-opacity duration-200 ease-in-out' : ''
 	},
+
+	is_active: function (event) {
+		if (event.cancelled) {
+			return false
+		}
+
+		if (event.date.end) {
+			return new Date(event.date.start).getTime() <= new Date().getTime() && new Date().getTime() < new Date(event.date.end).getTime() + 86400000
+		}
+
+		return new Date(event.date.start).getTime() <= new Date().getTime() && new Date().getTime() < new Date(event.date.start).getTime() + 86400000
+	}
 }
 
 const TEMPLATE = document.getElementById('template-main').innerHTML;
