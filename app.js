@@ -190,8 +190,8 @@ const fmt = {
 	},
 
 	background_color: function(event) {
-		const date_end = new Date(event.date.end || event.date.start)
-		return date_end <= new Date() ? 'opacity-50 hover:opacity-100 transition-opacity duration-200 ease-in-out' : ''
+		const date_end = new Date(event.date.end || event.date.start).getTime() + 86400000
+		return date_end <= new Date().getTime() ? 'opacity-50 hover:opacity-100 transition-opacity duration-200 ease-in-out' : ''
 	},
 
 	is_active: function (event) {
