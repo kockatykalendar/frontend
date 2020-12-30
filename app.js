@@ -122,7 +122,7 @@ const load_data = () => {
 
 // Formatting utilities
 const fmt = {
-	places: function (event) {
+	pretty_places: function (event) {
 		return event.places.join(', ')
 	},
 
@@ -142,15 +142,15 @@ const fmt = {
 		return result
 	},
 
-	type: function (event) {
+	pretty_type: function (event) {
 		return CONSTANTS.types[event.type]
 	},
 
-	organizers: function(event) {
+	pretty_organizers: function(event) {
 		return event.organizers.map((x) => ({'logo': CONSTANTS.logo[x], 'name': CONSTANTS.organizers[x] || x}))
 	},
 
-	contestants: function (event) {
+	pretty_contestants: function (event) {
 		let min_type = event.contestants.min.substr(0, 2)
 		let min_year = event.contestants.min.substr(2)
 
@@ -178,7 +178,7 @@ const fmt = {
 		return result
 	},
 
-	sciences: function (event) {
+	pretty_sciences: function (event) {
 		return event.sciences.map((x) => CONSTANTS.sciences[x]).join(', ')
 	},
 
