@@ -229,7 +229,7 @@ const render = () => {
 
 		// When both schools are disabled, we will show events without contestants limit OR without upper limit.
 		if (FILTER.school.length === 0) {
-			return (event.contestants.max == null && event.contestants.min == null) || event.contestants.max == null
+			return event.contestants.max == null
 		}
 
 		const school = FILTER.school[0]
