@@ -58,30 +58,36 @@ const CONSTANTS = {
 		'matfyz': 'logos/matfyz.png',
 		'fykos': 'logos/fykos.svg',
 		'nucem': 'logos/nucem.svg',
-	}
+	},
+	school_years: [
+		'Mladší',
+		'ZŠ 1', 'ZŠ 2', 'ZŠ 3', 'ZŠ 4', 'ZŠ 5', 'ZŠ 6', 'ZŠ 7', 'ZŠ 8', 'ZŠ 9',
+		'SŠ 1', 'SŠ 2', 'SŠ 3', 'SŠ 4',
+		'Starší'
+	]
 }
 
 const DATA_URL = 'https://raw.githubusercontent.com/kockatykalendar/data/gh-pages/2020_21.json'
 let DATA = []
-let FILTER = {
-	school: ['zs', 'ss'],
+let FILTER = JSON.parse(localStorage.getItem('filter')) ?? {
+	school: [0, 14],
 	sciences: ['mat', 'fyz', 'inf', 'other'],
 	organizers: ['trojsten', 'p-mat', 'sezam', 'strom', 'riesky', '*'],
 	default_organizers: ['trojsten', 'p-mat', 'sezam', 'strom', 'riesky'],
 }
 const CALENDAR = jsCalendar.new({
 	target: '#calendar',
-	firstDayOfTheWeek: "2",
-	monthFormat: "month YYYY",
-	language : "sk"
+	firstDayOfTheWeek: '2',
+	monthFormat: 'month YYYY',
+	language : 'sk'
 })
 
 const open_modal = () => {
-	document.getElementById("filter-modal").style.display = "block"
+	document.getElementById('filter-modal').style.display = 'block'
 }
 
 const close_modal = () => {
-	document.getElementById("filter-modal").style.display = "none"
+	document.getElementById('filter-modal').style.display = 'none'
 }
 
 const sorting_key = (event) => {
@@ -93,6 +99,10 @@ const sorting_key = (event) => {
 	}
 
 	return new Date(event.date.start)
+}
+
+const school_to_int = (school, max) => {
+	return (parseInt(school?.slice(-1), 10) + (school?.substr(0,2) === 'ss')*9) || max*14;
 }
 
 const load_data = () => {
@@ -130,7 +140,7 @@ const fmt_contestant = (contestant, prev_contestant) => {
 		return contestant.substr(2)
 	}
 
-	return CONSTANTS.contestant_types[contestant.substr(0, 2)] + " " + contestant.substr(2)
+	return CONSTANTS.contestant_types[contestant.substr(0, 2)] + ' ' + contestant.substr(2)
 }
 
 const fmt = {
@@ -164,22 +174,22 @@ const fmt = {
 
 	pretty_contestants: function (event) {
 		if (!event.contestants.min && !event.contestants.max) {
-			return "ktokoľvek"
+			return 'ktokoľvek'
 		}
 
 		if (!event.contestants.min && event.contestants.max) {
-			return fmt_contestant(event.contestants.max) + " a mladší"
+			return fmt_contestant(event.contestants.max) + ' a mladší'
 		}
 
 		if (event.contestants.min && !event.contestants.max) {
-			return fmt_contestant(event.contestants.min) + " a starší"
+			return fmt_contestant(event.contestants.min) + ' a starší'
 		}
 
 		if (event.contestants.min == event.contestants.max) {
 			return fmt_contestant(event.contestants.min)
 		}
 
-		return fmt_contestant(event.contestants.min) + " – " + fmt_contestant(event.contestants.max, event.contestants.min)
+		return fmt_contestant(event.contestants.min) + ' – ' + fmt_contestant(event.contestants.max, event.contestants.min)
 	},
 
 	pretty_sciences: function (event) {
@@ -212,6 +222,8 @@ const TEMPLATE = document.getElementById('template-main').innerHTML;
 const PARTIAL_TEMPLATE = document.getElementById('template-event-item').innerHTML;
 let visible_events = DATA
 let is_initial_scroll = false		// used to prevent calendar from hiding during initial scroll
+let first_id = 0
+let last_id = 0
 
 const render = () => {
 	let event_list = document.getElementById('event-list')
@@ -220,46 +232,8 @@ const render = () => {
 	visible_events = DATA
 
 	// School filter
-	// adapted from https://github.com/kockatykalendar/ical/blob/22986854ae309a9b29cb6c42af18d6e256687c15/build.py#L88-L113
 	visible_events = visible_events.filter((event) => {
-		// When filtering by both school types, we will show EVERYTHING.
-		if (FILTER.school.length === 2) {
-			return true
-		}
-
-		// When both schools are disabled, we will show events without contestants limit OR without upper limit.
-		if (FILTER.school.length === 0) {
-			return event.contestants.max == null
-		}
-
-		const school = FILTER.school[0]
-
-		// Events for everyone should be always visible.
-		if (event.contestants.max == null && event.contestants.min == null) {
-			return true
-		}
-
-		// We don't have upper limit,
-		if (event.contestants.max == null) {
-			const min = event.contestants.min.substr(0, 2)
-			if (min === "zs") {
-				return true	// ZS and older (will be always visible)
-			} else {
-				return min === school
-			}
-		}
-
-		// We don't have lower limit,
-		if (event.contestants.min == null) {
-			const max = event.contestants.max.substr(0, 2)
-			if (max === "ss") {
-				return true	// ZS and younger will be always visible
-			} else {
-				return max === school
-			}
-		}
-
-		return event.contestants.min.substr(0, 2) === school || event.contestants.max.substr(0, 2) === school
+		return Math.max(FILTER.school[0], FILTER.school[1]) >= Math.min(school_to_int(event.contestants.min, 0), school_to_int(event.contestants.max, 1)) && Math.min(FILTER.school[0], FILTER.school[1]) <= Math.max(school_to_int(event.contestants.max, 1), school_to_int(event.contestants.min, 0));
 	})
 
 	// Sciences filter
@@ -297,19 +271,24 @@ const render = () => {
 	visible_events.forEach((event, index) => {
 		event.id = index
 	})
+	
+	const event = visible_events.find(event =>
+		new Date(event.date.end || event.date.start) >= new Date()
+	) ?? visible_events[visible_events.length - 1]
+	
+	first_id = Math.max(parseInt(event.id, 10) - 5, 0)
+	last_id = Math.min(parseInt(event.id, 10) + 20, visible_events.length)
 
-	event_list.innerHTML = Mustache.render(TEMPLATE, {data: visible_events}, {partial : PARTIAL_TEMPLATE});
+	event_list.innerHTML = Mustache.render(TEMPLATE, {data: visible_events.slice(first_id, last_id)}, {partial : PARTIAL_TEMPLATE});
 
-	[...document.getElementsByClassName("js-event-header")].forEach(node => {
-		node.addEventListener("click", () => {
-			node.parentElement.querySelector(".js-event-description").classList.toggle("hidden")
-			node.querySelector(".js-event-icons").classList.toggle("hidden")
+	document.querySelectorAll('.js-event-header').forEach(node => {
+		node.addEventListener('click', () => {
+			node.parentElement.querySelector('.js-event-description').classList.toggle('hidden')
+			node.querySelector('.js-event-icons').classList.toggle('hidden')
 		})
 	})
 
-	const event = visible_events.find(event =>
-		new Date(event.date.end || event.date.start) >= new Date()
-	)
+
 	if (event) {
 		is_initial_scroll = true
 		scroll_to_id(`event-item-${event.id}`)
@@ -317,10 +296,10 @@ const render = () => {
 }
 
 const insert_event = (node, color) => {
-	let event_dot = document.createElement("div")
-	event_dot.setAttribute("class", "w-2 h-2 rounded-full")
+	let event_dot = document.createElement('div')
+	event_dot.setAttribute('class', 'w-2 h-2 rounded-full')
 	event_dot.style.backgroundColor = color
-	event_dot.style.margin = ".1rem"
+	event_dot.style.margin = '.1rem'
 	node.appendChild(event_dot)
 }
 
@@ -330,35 +309,35 @@ const setup_calendar = () => {
 
 	// Render header
 	CALENDAR.onMonthRender(function(index, element, info) {
-		document.getElementById("js-calendar-placeholder-month").innerText = element.innerText
+		document.getElementById('js-calendar-placeholder-month').innerText = element.innerText
 
 		if(!rendered) {
 			rendered = true;
-			let icon = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-			icon.setAttribute("viewBox", "0 0 24 24")
-			icon.setAttribute("width", "24")
-			icon.setAttribute("height", "24")
-			icon.setAttribute("fill", "none")
-			icon.setAttribute("stroke", "currentColor")
-			icon.setAttribute("stroke-width", "2")
-			icon.setAttribute("stroke-linecap", "round")
-			icon.setAttribute("stroke-linejoin", "round")
+			let icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+			icon.setAttribute('viewBox', '0 0 24 24')
+			icon.setAttribute('width', '24')
+			icon.setAttribute('height', '24')
+			icon.setAttribute('fill', 'none')
+			icon.setAttribute('stroke', 'currentColor')
+			icon.setAttribute('stroke-width', '2')
+			icon.setAttribute('stroke-linecap', 'round')
+			icon.setAttribute('stroke-linejoin', 'round')
 			// Setup arrows & filter
 			//filter icon
 			let filter = icon.cloneNode()
-			filter.setAttribute("class", "md:hidden")
-			filter.setAttribute("style", "margin: 10px 8px;")	// We can't use tailwind, because .jsCalendar * sets everything to 0 and takes precedence.
+			filter.setAttribute('class', 'md:hidden')
+			filter.setAttribute('style', 'margin: 10px 8px;')	// We can't use tailwind, because .jsCalendar * sets everything to 0 and takes precedence.
 			filter.innerHTML = '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>'
-			filter.addEventListener("click", open_modal)
-			element.parentElement.getElementsByClassName("jsCalendar-title-right")[0].appendChild(filter)
+			filter.addEventListener('click', open_modal)
+			element.parentElement.getElementsByClassName('jsCalendar-title-right')[0].appendChild(filter)
 			//right arrow
 			let right_arrow = icon.cloneNode()
 			right_arrow.innerHTML = '<line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>';
-			element.parentElement.getElementsByClassName("jsCalendar-nav-right")[0].appendChild(right_arrow)
+			element.parentElement.getElementsByClassName('jsCalendar-nav-right')[0].appendChild(right_arrow)
 			//left arrow
 			let left = icon.cloneNode()
 			left.innerHTML = '<line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline>';
-			element.parentElement.getElementsByClassName("jsCalendar-nav-left")[0].appendChild(left)
+			element.parentElement.getElementsByClassName('jsCalendar-nav-left')[0].appendChild(left)
 		}
 	});
 
@@ -377,9 +356,9 @@ const setup_calendar = () => {
 		}
 
 		// Insert event container
-		let event_container = document.createElement("div")
-		event_container.setAttribute("class", "flex justify-center flex-wrap")
-		event_container.style.maxHeight = "20px";
+		let event_container = document.createElement('div')
+		event_container.setAttribute('class', 'flex justify-center flex-wrap')
+		event_container.style.maxHeight = '20px';
 		element.appendChild(event_container)
 
 		// Load from data
@@ -433,18 +412,21 @@ document.querySelectorAll('.js-filter-checkbox').forEach((elem) => elem.onchange
 
 	if (checked && FILTER[filter_type].indexOf(value) === -1) {
 		FILTER[filter_type].push(value)
+		localStorage.setItem('filter', JSON.stringify(FILTER));
 		filter_update_checked()
 	}
 
 	if (!checked && FILTER[filter_type].indexOf(value) !== -1) {
 		FILTER[filter_type] = FILTER[filter_type].filter((x) => x != value)
+		localStorage.setItem('filter', JSON.stringify(FILTER));
 		filter_update_checked()
 	}
 
-	load_data()
+	render()
+	CALENDAR.refresh()
 })
 
-window.addEventListener("keydown", e => {
+window.addEventListener('keydown', e => {
 	if(!e.isComposing && e.keyCode === 27){
 		close_modal()
 	}
@@ -452,25 +434,101 @@ window.addEventListener("keydown", e => {
 
 
 let last_scroll = document.getElementById('scroll').scrollTop
-document.getElementById('scroll').addEventListener("scroll", e => {
-	let new_scroll = document.getElementById('scroll').scrollTop
+document.getElementById('scroll').addEventListener('scroll', e => {
+	const { scrollTop, scrollHeight, clientHeight } = document.getElementById('scroll')
+
 	if (is_initial_scroll) {
-		last_scroll = new_scroll
-		setTimeout(() => {is_initial_scroll = false}, 500)		// smooth scrolling can be still going on
+		last_scroll = scrollTop
+		setTimeout(() => {
+			is_initial_scroll = false		// smooth scrolling can be still going on
+			setInterval(() => {
+				let scroll = document.getElementById('scroll')
+				if(scroll.scrollTop == 0) scroll.scroll(0,2)
+			}, 100)
+		}, 500)
 		return
 	}
 
-	last_scroll = Math.min(last_scroll, new_scroll)
-	if (Math.abs(new_scroll - last_scroll) > 200) {
-		document.getElementById("js-calendar-placeholder").classList.remove("hidden")
-		document.getElementById("js-calendar-holder").classList.add("hidden")
+	last_scroll = Math.min(last_scroll, scrollTop)
+	if (Math.abs(scrollTop - last_scroll) > 200) {
+		document.getElementById('js-calendar-placeholder').classList.remove('hidden')
+		document.getElementById('js-calendar-holder').classList.add('hidden')
+	}
+	
+	let event_list = document.getElementById('event-list')
+	
+	if(clientHeight + scrollTop >= scrollHeight - 100) {
+		
+		let old_last_id = last_id;
+		last_id = Math.min(last_id + 3, visible_events.length)
+		event_list.insertAdjacentHTML('beforeend', Mustache.render(TEMPLATE, {data: visible_events.slice(old_last_id, last_id)}, {partial : PARTIAL_TEMPLATE}));
+	}
+	
+	if(scrollTop < 100) {
+		let event_list = document.getElementById('event-list')
+		let old_first_id = first_id;
+		first_id = Math.max(first_id - 3, 0)
+		event_list.insertAdjacentHTML('afterbegin', Mustache.render(TEMPLATE, {data: visible_events.slice(first_id, old_first_id)}, {partial : PARTIAL_TEMPLATE}));
 	}
 })
 
 
-document.getElementById("js-calendar-placeholder-filter").addEventListener("click", open_modal)
-document.getElementById("js-calendar-placeholder-open").addEventListener("click", () => {
-	document.getElementById("js-calendar-placeholder").classList.add("hidden")
-	document.getElementById("js-calendar-holder").classList.remove("hidden")
+document.getElementById('js-calendar-placeholder-filter').addEventListener('click', open_modal)
+document.getElementById('js-calendar-placeholder-open').addEventListener('click', () => {
+	document.getElementById('js-calendar-placeholder').classList.add('hidden')
+	document.getElementById('js-calendar-holder').classList.remove('hidden')
 	last_scroll = document.getElementById('scroll').scrollTop
 })
+
+
+let switched = false;
+let slider_timer = 0;
+document.querySelectorAll('.double-slider').forEach(parent => {
+	parent.addEventListener('focusin', e => {
+		if(e.target.className == 'va') {
+			parent.classList.toggle('switched');
+		}
+	}, false);
+	parent.addEventListener('focusout', e => {
+		if(e.target.className == 'va') {
+			parent.classList.toggle('switched');
+		}
+	}, false);
+	parent.addEventListener('input', e => {
+		document.querySelectorAll(`.${e.target.className}`).forEach( el => {
+			el.parentNode.style.setProperty(`--${e.target.className}`, +e.target.value);
+			el.value = e.target.value;
+			el.nextElementSibling.firstElementChild.innerHTML = CONSTANTS.school_years[e.target.value];
+		});
+		
+		if((parseInt(document.getElementById('v1').value) < parseInt(document.getElementById('v0').value)) && !switched) {
+			e.target.parentNode.classList.toggle('switched');
+			switched = true;
+		} else if ((parseInt(document.getElementById('v1').value) > parseInt(document.getElementById('v0').value)) && switched) {
+			e.target.parentNode.classList.toggle('switched');
+			switched = false;
+		}
+
+		if (e.target.className == 'va') FILTER.school[0] = e.target.value;
+		else FILTER.school[1] = e.target.value;
+		localStorage.setItem('filter', JSON.stringify(FILTER));
+
+		clearTimeout(slider_timer);
+		slider_timer = setTimeout(() => {
+			render();
+			CALENDAR.refresh();
+		}, 300);
+	}, false);
+});
+
+document.querySelectorAll('.va').forEach( el => {
+	el.parentNode.style.setProperty('--va', FILTER.school[0]);
+	el.value = FILTER.school[0];
+	el.nextElementSibling.firstElementChild.innerHTML = CONSTANTS.school_years[FILTER.school[0]];
+});
+
+document.querySelectorAll('.vb').forEach( el => {
+	el.parentNode.style.setProperty('--vb', FILTER.school[1]);
+	el.value = FILTER.school[1];
+	el.nextElementSibling.firstElementChild.innerHTML = CONSTANTS.school_years[FILTER.school[1]];
+});
