@@ -1,0 +1,377 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+
+/* ---- SLIDER INPUT ---- */
+
+.slider {
+	@apply w-10 h-6 rounded-full cursor-pointer relative mr-2 bg-gray;
+}
+
+.slider:before {
+	@apply absolute w-6 h-6 bg-white rounded-full border-gray shadow-none transition-transform duration-300 border-slider;
+	content: "";
+}
+
+input:checked + .slider {
+	@apply bg-blue;
+}
+input:checked + .slider:before {
+	@apply border-blue;
+}
+
+input:checked + .slider.inf {
+	@apply bg-green;
+}
+input:checked + .slider.inf:before {
+	@apply border-green;
+}
+
+input:checked + .slider.mat {
+	@apply bg-blue;
+}
+input:checked + .slider.mat:before {
+	@apply border-blue;
+}
+
+input:checked + .slider.fyz {
+	@apply bg-orange;
+}
+input:checked + .slider.fyz:before {
+	@apply border-orange;
+}
+
+input:checked + .slider.otr {
+	@apply bg-red;
+}
+input:checked + .slider.otr:before {
+	@apply border-red;
+}
+
+input:checked + .slider:before {
+	@apply transform-gpu translate-x-4;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* ---- double-slider ---- */
+
+.double-slider {
+	@apply grid px-6 py-0 my-0 -mx-1.5 relative overflow-hidden gap-y-3 w-87;
+	--tw-gradient-stops: #4299e1 calc(.75rem + (var(--va))/14*17.25rem), #4299e1 calc(.75rem + (var(--vb))/14*17.25rem);
+	grid-template-rows: -webkit-max-content 1.5rem -webkit-max-content;
+	grid-template-rows: max-content 1.5rem max-content;
+}
+
+.double-slider::before, .double-slider::after {
+	@apply row-start-2 col-start-1 self-center h-6 rounded-full bg-gray transition-all duration-300;
+	--mask: red;
+	-webkit-mask: var(--mask);
+			mask: var(--mask);
+	-webkit-mask-composite: xor;
+			mask-composite: exclude;
+	content: "";
+}
+
+.double-slider::after {
+	@apply bg-gradient-to-r;
+	--mask: linear-gradient(90deg, red calc(.75rem + (var(--va))/14*17.25rem), transparent 0), linear-gradient(90deg, red calc(.75rem + (var(--vb))/14*17.25rem), transparent 0);
+}
+
+.double-slider:focus-within {
+	--tw-gradient-stops: #4299e1 calc(.75rem + (min(var(--va), var(--vb))/14*17.25rem)), #2C5282 calc(.75rem + (max(var(--va), var(--vb))/14*17.25rem));
+}
+
+.double-slider.switched:focus-within {
+	--tw-gradient-stops: #2C5282 calc(.75rem + (min(var(--va), var(--vb))/14*17.25rem)), #4299e1 calc(.75rem + (max(var(--va), var(--vb))/14*17.25rem));
+}
+
+.double-slider > input[type=range] {
+	@apply row-start-2 col-start-1 inset-0 transition duration-300 pointer-events-none cursor-grab z-10;
+	background: none;
+}
+
+.double-slider > input[type=range]:active {
+	@apply cursor-grabbing;
+}
+
+.double-slider > input[type=range]::-webkit-slider-runnable-track, .double-slider > input[type=range]::-webkit-slider-thumb, .double-slider > input[type=range] {
+	@apply appearance-none;
+}
+
+.double-slider > input[type=range]::-webkit-slider-runnable-track, .double-slider > input[type=range]::-moz-range-track {
+	@apply w-full h-full bg-none;
+}
+
+.double-slider > input[type=range]::-webkit-slider-thumb {
+	@apply box-border transition duration-300 h-6 w-6 rounded-full bg-white pointer-events-auto border-solid border-slider border-blue;
+}
+
+.double-slider > input[type=range]::-moz-range-thumb {
+	@apply box-border transition duration-300 h-6 w-6 rounded-full bg-white pointer-events-auto border-solid border-slider border-blue;
+}
+
+.double-slider > input[type=range]:focus::-webkit-slider-thumb {
+	@apply ring-4 ring-blue-800 border-blue-800;
+}
+
+.double-slider > input[type=range]:focus::-moz-range-thumb {
+	@apply ring-4 ring-blue-800 border-blue-800;
+}
+
+.double-slider > input[type=range]:focus {
+	@apply outline-none z-20;
+}
+
+.double-slider > input[type=range]:focus + output {
+	@apply z-20;
+}
+
+.double-slider > input[type=range]:focus + output > span {
+	@apply bg-blue-800;
+}
+
+@media screen and (max-width: 768px) {
+.double-slider > input[type=range]:hover::-webkit-slider-thumb {
+	@apply ring-4 ring-blue-800 border-blue-800;
+}
+
+.double-slider > input[type=range]:hover::-moz-range-thumb {
+	@apply ring-4 ring-blue-800 border-blue-800;
+}
+
+.double-slider > input[type=range]:hover {
+	@apply outline-none z-20;
+}
+
+.double-slider > input[type=range]:hover + output {
+	@apply z-20;
+}
+
+.double-slider > input[type=range]:hover + output > span {
+	@apply bg-blue-800;
+}
+}
+
+.double-slider > output {
+	@apply row-start-1 col-start-1 max-w-max ml-3 transform-gpu;
+	--tw-translate-x: calc((var(--c))/14*17.25rem);
+}
+
+.double-slider > output > span {
+	@apply block rounded px-1.5 text-white transition duration-300 transform-gpu -translate-x-1/2 bg-blue;
+}
+
+.svg {
+	@apply stroke-current stroke-2 fill-transparent;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+/* KockatyKalendar.sk Styles */
+
+/* ---- SPINNER ---- */
+.spinner {
+	border-width: 20px;
+	border-top-color: #4299e1;
+	-webkit-animation: spinner-animation 1.5s linear infinite;
+	animation: spinner-animation 1.5s linear infinite;
+}
+
+@-webkit-keyframes spinner-animation {
+	0% { -webkit-transform: rotate(0deg); }
+	100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spinner-animation {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+
+/* ---- TOOLTIPS ---- */
+.tooltip::after {
+	display: none;
+	position: absolute;
+	z-index: 999;
+	background-color: white;
+	border-width: 2px;
+	border-color: #ED8936;
+	border-radius: 10px;
+	color: #ED8936;
+	font-size: 1rem;
+	content: 'Táto akcia sa môže kvôli pandemickej situácii zrušiť aj na poslednú chvíľu. Najaktuálnejšie informácie nájdeš na stránke organizátora.';
+	padding: 5px 10px;
+	margin: 10px;
+	bottom: 0;
+	left: 100%;
+	width: 200px;
+	transform: translate(-50%, calc(100% + 20px));
+}
+
+.tooltip:hover::after {
+	display: block;
+}
+
+.tooltip::before {
+	display: none;
+	position: absolute;
+	z-index: 999;
+	border-radius: 6px;
+	background-color: #ED8936;
+	color: white;
+	font-size: .75rem;
+	font-weight: 600;
+	content: 'Upozornenie';
+	padding-inline: 5px;
+	margin: 10px;
+	height: 30px;
+	bottom: 0;
+	left: 37%;
+	transform: translate(-50%, calc(100% + 5px));
+}
+
+.tooltip:hover::before {
+		display: block;
+}
+
+
+/* ---- CALENDAR ---- */
+.jsCalendar.kk {
+	margin: 0;
+	padding: 0;
+	display: flex;
+}
+
+.jsCalendar.kk tbody .mr-1 {
+	margin-right: .25rem !important;
+}
+
+.jsCalendar.kk tbody .mb-1 {
+	margin-bottom: .25rem !important;
+}
+
+.jsCalendar.kk table {
+	font-family: inherit;
+	display: block;
+	border-collapse: collapse;
+	background-color: transparent;
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	width: 100%;
+
+	/* Disable touch and text select */
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.jsCalendar.kk thead .jsCalendar-nav-left:after,
+.jsCalendar.kk thead .jsCalendar-nav-right:after {
+	content: "" !important;
+}
+
+.jsCalendar.kk thead .jsCalendar-title {
+	text-align: center;
+	width: 100%;
+	line-height: 50px;
+}
+
+.jsCalendar.kk thead .jsCalendar-title-name {
+	padding: 0;
+	margin: 0 auto 0 auto;
+	width: auto;
+	color: rgba(74,85,104,1);
+	font-size: 1.25rem;
+	font-weight: 700;
+	display: contents;
+}
+
+.jsCalendar.kk svg {
+	color: rgba(74,85,104,1);
+}
+
+.jsCalendar.kk tbody,
+.jsCalendar.kk thead {
+	position: relative;
+	display: block;
+}
+
+.jsCalendar.kk tbody {
+	border-width: 1px;
+	border-color: rgba(203,213,224,1);
+}
+
+.jsCalendar.kk tbody tr,
+.jsCalendar.kk thead tr {
+	display: flex;
+	position: relative;
+	width: 100%;
+}
+
+.jsCalendar.kk tbody td,
+.jsCalendar.kk thead .jsCalendar-week-days th {
+	padding-left: .25rem;
+	padding-right: .25rem;
+	padding-top: .25rem;
+	padding-bottom: .25rem;
+	min-width: 2em;
+	height: 39px;
+	margin: 0;
+	border-radius: 0;
+	font-size: .75rem;
+	font-weight: 700;
+	color: rgba(74,85,104,1);
+	width: calc(100% / 7);
+	overflow-wrap: anywhere;
+	line-height: .8rem;
+}
+
+.jsCalendar.kk thead .jsCalendar-week-days th {
+	height: auto;
+	padding-top: 1rem;
+	padding-bottom: 0.5rem;
+}
+
+.jsCalendar thead .jsCalendar-week-days th {
+	display: table-cell;
+}
+
+.jsCalendar.kk tbody tr {
+	border-bottom-width: 1px;
+	border-color: rgba(203,213,224,1);
+}
+
+.jsCalendar.kk tbody tr:last-child {
+	border-bottom-width: 0px;
+}
+
+.jsCalendar.kk tbody td:hover {
+	background-color: rgba(31, 67, 83, 0.1);
+}
+.jsCalendar.kk tbody td.jsCalendar-current {
+	background-color: rgba(82, 201, 255, 0.2);
+}
+.jsCalendar.kk tbody td.jsCalendar-next,
+.jsCalendar.kk tbody td.jsCalendar-previous {
+	color: rgba(74,85,104,0.2);
+}
+
+.jsCalendar-nav-right, .jsCalendar-nav-left {
+	height: 24px !important;
+	width: 24px !important;
+}
+
+.calendar-event-container {
+	justify-content: center;
+	flex-wrap: wrap;
+	display: flex;
+}

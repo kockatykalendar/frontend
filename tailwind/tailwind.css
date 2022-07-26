@@ -1,0 +1,174 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+
+/* ---- SLIDER INPUT ---- */
+
+.slider {
+	@apply w-10 h-6 rounded-full cursor-pointer relative mr-2 bg-gray;
+}
+
+.slider:before {
+	@apply absolute w-6 h-6 bg-white rounded-full border-gray shadow-none transition-transform duration-300 border-slider;
+	content: "";
+}
+
+input:checked + .slider {
+	@apply bg-blue;
+}
+input:checked + .slider:before {
+	@apply border-blue;
+}
+
+input:checked + .slider.inf {
+	@apply bg-green;
+}
+input:checked + .slider.inf:before {
+	@apply border-green;
+}
+
+input:checked + .slider.mat {
+	@apply bg-blue;
+}
+input:checked + .slider.mat:before {
+	@apply border-blue;
+}
+
+input:checked + .slider.fyz {
+	@apply bg-orange;
+}
+input:checked + .slider.fyz:before {
+	@apply border-orange;
+}
+
+input:checked + .slider.otr {
+	@apply bg-red;
+}
+input:checked + .slider.otr:before {
+	@apply border-red;
+}
+
+input:checked + .slider:before {
+	@apply transform-gpu translate-x-4;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* ---- double-slider ---- */
+
+.double-slider {
+	@apply grid px-6 py-0 my-0 -mx-1.5 relative overflow-hidden gap-y-3 w-87;
+	--tw-gradient-stops: #4299e1 calc(.75rem + (var(--va))/14*17.25rem), #4299e1 calc(.75rem + (var(--vb))/14*17.25rem);
+	grid-template-rows: -webkit-max-content 1.5rem -webkit-max-content;
+	grid-template-rows: max-content 1.5rem max-content;
+}
+
+.double-slider::before, .double-slider::after {
+	@apply row-start-2 col-start-1 self-center h-6 rounded-full bg-gray transition-all duration-300;
+	--mask: red;
+	-webkit-mask: var(--mask);
+			mask: var(--mask);
+	-webkit-mask-composite: xor;
+			mask-composite: exclude;
+	content: "";
+}
+
+.double-slider::after {
+	@apply bg-gradient-to-r;
+	--mask: linear-gradient(90deg, red calc(.75rem + (var(--va))/14*17.25rem), transparent 0), linear-gradient(90deg, red calc(.75rem + (var(--vb))/14*17.25rem), transparent 0);
+}
+
+.double-slider:focus-within {
+	--tw-gradient-stops: #4299e1 calc(.75rem + (min(var(--va), var(--vb))/14*17.25rem)), #2C5282 calc(.75rem + (max(var(--va), var(--vb))/14*17.25rem));
+}
+
+.double-slider.switched:focus-within {
+	--tw-gradient-stops: #2C5282 calc(.75rem + (min(var(--va), var(--vb))/14*17.25rem)), #4299e1 calc(.75rem + (max(var(--va), var(--vb))/14*17.25rem));
+}
+
+.double-slider > input[type=range] {
+	@apply row-start-2 col-start-1 inset-0 transition duration-300 pointer-events-none cursor-grab z-10;
+	background: none;
+}
+
+.double-slider > input[type=range]:active {
+	@apply cursor-grabbing;
+}
+
+.double-slider > input[type=range]::-webkit-slider-runnable-track, .double-slider > input[type=range]::-webkit-slider-thumb, .double-slider > input[type=range] {
+	@apply appearance-none;
+}
+
+.double-slider > input[type=range]::-webkit-slider-runnable-track, .double-slider > input[type=range]::-moz-range-track {
+	@apply w-full h-full bg-none;
+}
+
+.double-slider > input[type=range]::-webkit-slider-thumb {
+	@apply box-border transition duration-300 h-6 w-6 rounded-full bg-white pointer-events-auto border-solid border-slider border-blue;
+}
+
+.double-slider > input[type=range]::-moz-range-thumb {
+	@apply box-border transition duration-300 h-6 w-6 rounded-full bg-white pointer-events-auto border-solid border-slider border-blue;
+}
+
+.double-slider > input[type=range]:focus::-webkit-slider-thumb {
+	@apply ring-4 ring-blue-800 border-blue-800;
+}
+
+.double-slider > input[type=range]:focus::-moz-range-thumb {
+	@apply ring-4 ring-blue-800 border-blue-800;
+}
+
+.double-slider > input[type=range]:focus {
+	@apply outline-none z-20;
+}
+
+.double-slider > input[type=range]:focus + output {
+	@apply z-20;
+}
+
+.double-slider > input[type=range]:focus + output > span {
+	@apply bg-blue-800;
+}
+
+@media screen and (max-width: 768px) {
+.double-slider > input[type=range]:hover::-webkit-slider-thumb {
+	@apply ring-4 ring-blue-800 border-blue-800;
+}
+
+.double-slider > input[type=range]:hover::-moz-range-thumb {
+	@apply ring-4 ring-blue-800 border-blue-800;
+}
+
+.double-slider > input[type=range]:hover {
+	@apply outline-none z-20;
+}
+
+.double-slider > input[type=range]:hover + output {
+	@apply z-20;
+}
+
+.double-slider > input[type=range]:hover + output > span {
+	@apply bg-blue-800;
+}
+}
+
+.double-slider > output {
+	@apply row-start-1 col-start-1 max-w-max ml-3 transform-gpu;
+	--tw-translate-x: calc((var(--c))/14*17.25rem);
+}
+
+.double-slider > output > span {
+	@apply block rounded px-1.5 text-white transition duration-300 transform-gpu -translate-x-1/2 bg-blue;
+}
+
+.svg {
+	@apply stroke-current stroke-2 fill-transparent;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
