@@ -23,6 +23,10 @@ const CONSTANTS = {
 		'other': 'iné',
 		'any': 'všetky',
 	},
+	countries: {
+		"sk": "Slovensko",
+		"cz": "Česko",
+	},
 	colors: {
 		'red': '#E53E3E',
 		'orange': '#ED8936',
@@ -59,6 +63,7 @@ let max_loaded_year = 0;
 let FILTER = JSON.parse(localStorage.getItem('filter')) ?? {
 	school: [0, CONSTANTS.school_years.length-1],
 	sciences: Object.keys(CONSTANTS.sciences),
+	countries: Object.keys(CONSTANTS.countries),
 	organizers: [...DEFAULT_ORGANIZERS, '*'],
 	default_organizers: DEFAULT_ORGANIZERS,
 }
@@ -327,6 +332,19 @@ const render = (move_focus = true) => {
 			if (event.organizers.length === 0) { return true }
 			for (let i = event.organizers.length - 1; i >= 0; i--) {
 				if (FILTER.default_organizers.indexOf(event.organizers[i]) === -1) {
+					return true
+				}
+			}
+		}
+
+		return false
+	})
+
+	// Country filter
+	visible_events = visible_events.filter((event) => {
+		for (let i = FILTER.countries.length - 1; i >= 0; i--) {
+			for (let j = event.organizers.length - 1; j >= 0; j--){
+				if (ORGANIZERS[event.organizers[j]].country == FILTER.countries[i]){
 					return true
 				}
 			}
