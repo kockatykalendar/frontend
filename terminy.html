@@ -88,6 +88,20 @@
         </label>
 
         <h2 id="org-filter-aside" class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Organizátori</h2>
+
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Krajiny</h2>
+
+      <label class="flex select-none items-center my-1">
+        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="sk">
+        <span class="slider sk"></span>
+        Slovensko
+      </label>
+      <label class="flex select-none items-center my-1">
+        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="cz">
+        <span class="slider cz"></span>
+        Česko
+      </label>
+      
       </section>
     </aside>
 
@@ -122,7 +136,7 @@
         <output for="v2" style="--c: var(--va)"><span>Mladší</span></output>
         <label class="sr-only" for="v3">Koniec intervalu</label>
         <input class="vb" type="range" id="v3" min="0" value="14" max="14"/>
-        <output for="v3" style="--c: var(--vb); z-index = 99;"><span>Starší</span></output>
+        <output for="v3" style="--c: var(--vb); z-index: 99;"><span>Starší</span></output>
       </div>
 
       <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Vedy</h2>
@@ -149,6 +163,19 @@
       </label>
 
       <h2 id="org-filter-modal" class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Organizátori</h2>
+
+      <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Krajiny</h2>
+
+      <label class="flex select-none items-center my-1">
+        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="sk">
+        <span class="slider sk"></span>
+        Slovensko
+      </label>
+      <label class="flex select-none items-center my-1">
+        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="cz">
+        <span class="slider cz"></span>
+        Česko
+      </label>
 
       <button class="mt-6 rounded-lg bg-blue-500 text-white font-bold px-3 py-2 hover:bg-blue-600 text-xs" onclick="close_modal()">Zobraziť výsledky</button>
     </div>
