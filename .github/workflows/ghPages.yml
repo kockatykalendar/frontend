@@ -49,7 +49,7 @@ jobs:
           sed -i "s|build.css|build.css?v=$(git log --format="%h" -n 1)|g" *.html
 
       - name: Upload artifact 🚀
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
           path: '.'
