@@ -41,7 +41,7 @@ jobs:
       - name: Build 🔧
         run: |
           cat tailwind.css custom.css > tailwind.temp.css
-          ~/.bun/bin/bun x tailwindcss@experimental -i tailwind.temp.css -o build.css -m
+          ~/.bun/bin/bun x @tailwindcss/cli -i tailwind.temp.css -o build.css -m
 
       - name: Remove dev css links 🔪
         run: |
