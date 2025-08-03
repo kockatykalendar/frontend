@@ -131,12 +131,15 @@ const school_to_int = (school, max) => {
 }
 
 const load_json = async (url) => {
-	const response = await fetch(url);
-	if (response.ok) {
-		const jsonValue = await response.json();
-		return Promise.resolve(jsonValue);
-	} else {
-		return [];
+	if (url == DATA_URL_PREFIX + "undefined") return []; // Hotfix to get rid of GET-erros
+	else {
+		const response = await fetch(url);
+		if (response.ok) {
+			const jsonValue = await response.json();
+			return Promise.resolve(jsonValue);
+		} else {
+			return [];
+		}
 	}
 }
 
@@ -371,14 +374,16 @@ const render = (move_focus = true) => {
 		last_id = Math.min(parseInt(event?.id, 10) + 20, visible_events.length)
 	}
 
-		event_list.innerHTML = Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, last_id)}, {partial : PARTIAL_EVENT_TEMPLATE});
+	if (first_id > visible_events.length) first_id = visible_events.length
+	if (last_id > visible_events.length) last_id = visible_events.length
+	event_list.innerHTML = Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, last_id)}, {partial : PARTIAL_EVENT_TEMPLATE});
 
-		[...document.getElementsByClassName("js-event-header")].forEach(node => {
-			node.addEventListener("click", () => {
-				node.parentElement.querySelector(".js-event-description").classList.toggle("hidden")
-				node.querySelector(".js-event-icons").classList.toggle("hidden")
-			})
+	[...document.getElementsByClassName("js-event-header")].forEach(node => {
+		node.addEventListener("click", () => {
+			node.parentElement.querySelector(".js-event-description").classList.toggle("hidden")
+			node.querySelector(".js-event-icons").classList.toggle("hidden")
 		})
+	})
 
 	if (move_focus) {
 		if (event) {
@@ -574,12 +579,14 @@ const scroll_listener = async e => {
 			document.getElementById('scroll').removeEventListener('scroll', scroll_listener)
 			min_loaded_year--
 			let new_data = await load_events(min_loaded_year)
-			first_id += new_data.length
-			old_first_id += new_data.length
-			last_id += new_data.length
-			DATA = new_data.concat(DATA)
-			render(false)
-			document.getElementById('scroll').addEventListener('scroll', scroll_listener)
+			if (new_data.length != 0){
+				first_id += new_data.length
+				old_first_id += new_data.length
+				last_id += new_data.length
+				DATA = new_data.concat(DATA)
+				render(false)
+				document.getElementById('scroll').addEventListener('scroll', scroll_listener)
+			}
 		}
 		first_id = Math.max(first_id - 5, 0)
 		event_list.insertAdjacentHTML('afterbegin', Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, old_first_id)}, {partial : PARTIAL_EVENT_TEMPLATE}));
