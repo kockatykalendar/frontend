@@ -217,6 +217,10 @@ const fmt_contestant = (contestant, prev_contestant) => {
 }
 
 const fmt = {
+	places_defined: function (event) {
+		return event.hasOwnProperty("places") && event.places.length != 0
+	},
+
 	pretty_places: function (event) {
 		return event.places.join(', ')
 	},
