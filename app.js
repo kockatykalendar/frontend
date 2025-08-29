@@ -222,7 +222,7 @@ const fmt = {
 	},
 
 	pretty_places: function (event) {
-		return event.places.join(', ')
+		return event.places?.join(', ')
 	},
 
 	date_verbose: function (event) {
