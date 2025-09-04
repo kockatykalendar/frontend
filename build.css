@@ -1139,12 +1139,20 @@ input:checked + .slider.fyz:before {
   border-color: #ed8936;
 }
 
-input:checked + .slider.biochem {
+input:checked + .slider.bio {
   background-color: #fdc700;
 }
 
-input:checked + .slider.biochem:before {
+input:checked + .slider.bio:before {
   border-color: #fdc700;
+}
+
+input:checked + .slider.chem {
+  background-color: #8e24aa;
+}
+
+input:checked + .slider.chem:before {
+  border-color: #8e24aa;
 }
 
 input:checked + .slider.otr {
