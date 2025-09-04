@@ -40,6 +40,13 @@ input:checked + .slider.fyz:before {
 	@apply border-orange;
 }
 
+input:checked + .slider.biochem {
+	@apply bg-yellow;
+}
+input:checked + .slider.biochem:before {
+	@apply border-yellow;
+}
+
 input:checked + .slider.otr {
 	@apply bg-red;
 }

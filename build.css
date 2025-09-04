@@ -1139,6 +1139,14 @@ input:checked + .slider.fyz:before {
   border-color: #ed8936;
 }
 
+input:checked + .slider.biochem {
+  background-color: #fdc700;
+}
+
+input:checked + .slider.biochem:before {
+  border-color: #fdc700;
+}
+
 input:checked + .slider.otr {
   background-color: #e53e3e;
 }

@@ -9,13 +9,13 @@
     <title>iCalendar - KockatýKalendár.sk</title>
 
     <meta name="theme-color" content="#4299e1">
-    <meta name="description" content="Pridajte si mat/fyz/inf akcie priamo do vášho kalendára.">
+    <meta name="description" content="Pridajte si matematické, fyzikálne, informatické a ďalšie akcie priamo do vášho kalendára.">
 
     <meta property="og:image" content="img/social.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:title" content="KockatýKalendár.sk" />
-    <meta property="og:description" content="Pridajte si mat/fyz/inf akcie priamo do vášho kalendára." />
+    <meta property="og:description" content="Pridajte si matematické, fyzikálne, informatické a ďalšie akcie priamo do vášho kalendára." />
   <meta property="og:site_name" content="KockatýKalendár.sk" />
 </head>
 <body class="antialiased max-h-screen h-screen flex flex-col">
@@ -76,6 +76,9 @@
                     </div>
                     <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': science === 'inf' }" @click="science = 'inf'">
                         Informatika
+                    </div>
+                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': science === 'biochem' }" @click="science = 'biochem'">
+                        Chémia / Biológia
                     </div>
                     <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': science === 'other' }" @click="science = 'other'">
                         Ostatné
