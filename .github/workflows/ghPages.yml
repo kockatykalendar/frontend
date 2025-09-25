@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: Checkout code 🛎️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
       - name: Setup Pages ⚙️
@@ -50,7 +50,7 @@ jobs:
           sed -i "s|build.css|build.css?v=$(git log --format="%h" -n 1)|g" *.html
 
       - name: Upload artifact 🚀
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           # Upload entire repository
           path: '.'

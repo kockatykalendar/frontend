@@ -40,6 +40,20 @@ input:checked + .slider.fyz:before {
 	@apply border-orange;
 }
 
+input:checked + .slider.bio {
+	@apply bg-yellow;
+}
+input:checked + .slider.bio:before {
+	@apply border-yellow;
+}
+
+input:checked + .slider.chem {
+	@apply bg-purple;
+}
+input:checked + .slider.chem:before {
+	@apply border-purple;
+}
+
 input:checked + .slider.otr {
 	@apply bg-red;
 }
