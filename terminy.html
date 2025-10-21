@@ -54,7 +54,7 @@
       <section id="calendar" class="kk flex mx-2 my-2 text-center"></section>
 
       <section class="px-6 pt-6 hidden md:block filter">
-        <h2 class="font-bold uppercase text-gray-700 text-sm mb-2">Ročníky</h2>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mb-2">Ročník</h2>
 
         <div class="double-slider" role="group" aria-labelledby="multi-lbl" style="--va: 0; --vb: 14;">
           <label class="sr-only" for="v0">Začiatok intervalu</label>
@@ -65,8 +65,7 @@
           <output for="v1" style="--c: var(--vb)"><span>Starší</span></output>
         </div>
 
-        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Vedy</h2>
-
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Veda</h2>
         <label class="flex select-none items-center my-1">
           <input class="js-filter-checkbox hidden" type="checkbox" data-filter="sciences" value="mat">
           <span class="slider mat"></span>
@@ -98,20 +97,41 @@
           Ostatné
         </label>
 
-        <h2 id="org-filter-aside" class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Organizátori</h2>
+        <h2 id="org-filter-aside" class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Organizátor</h2>
 
-        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Krajiny</h2>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Krajina</h2>
+        <label class="flex select-none items-center my-1">
+          <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="sk">
+          <span class="slider sk"></span>
+          Slovensko
+        </label>
+        <label class="flex select-none items-center my-1">
+          <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="cz">
+          <span class="slider cz"></span>
+          Česko
+        </label>
 
-      <label class="flex select-none items-center my-1">
-        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="sk">
-        <span class="slider sk"></span>
-        Slovensko
-      </label>
-      <label class="flex select-none items-center my-1">
-        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="cz">
-        <span class="slider cz"></span>
-        Česko
-      </label>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Typ akcie</h2>
+        <label class="flex select-none items-center my-1">
+          <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="olympiada sutaz">
+          <span class="slider"></span>
+          Olympiáda / súťaž
+        </label>
+        <label class="flex select-none items-center my-1">
+          <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="seminar">
+          <span class="slider"></span>
+          Seminár
+        </label>
+        <label class="flex select-none items-center my-1">
+          <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="sustredenie tabor vikendovka">
+          <span class="slider"></span>
+          Sústredenie / víkendovka
+        </label>
+        <label class="flex select-none items-center my-1">
+          <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="other prednasky">
+          <span class="slider"></span>
+          Ostatné
+        </label>
 
       </section>
     </aside>
@@ -139,7 +159,7 @@
         <button type="reset" title="Zmaže hľadanie" class="flex-none rounded-lg border border-blue-500 text-blue-500 font-bold px-3 py-2 hover:bg-blue-100 text-xs" onclick="close_search()">Zmaž</button>
       </div>
 
-      <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Ročníky</h2>
+      <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Ročník</h2>
 
       <div class="double-slider" role="group" aria-labelledby="multi-lbl" style="--va: 0; --vb: 14;">
         <label class="sr-only" for="v2">Začiatok intervalu</label>
@@ -150,8 +170,7 @@
         <output for="v3" style="--c: var(--vb); z-index: 99;"><span>Starší</span></output>
       </div>
 
-      <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Vedy</h2>
-
+      <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Veda</h2>
       <label class="flex select-none items-center my-1">
         <input class="js-filter-checkbox hidden" type="checkbox" data-filter="sciences" value="mat">
         <span class="slider mat"></span>
@@ -183,10 +202,9 @@
         Ostatné
       </label>
 
-      <h2 id="org-filter-modal" class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Organizátori</h2>
+      <h2 id="org-filter-modal" class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Organizátor</h2>
 
-      <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Krajiny</h2>
-
+      <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Krajina</h2>
       <label class="flex select-none items-center my-1">
         <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="sk">
         <span class="slider sk"></span>
@@ -196,6 +214,28 @@
         <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="cz">
         <span class="slider cz"></span>
         Česko
+      </label>
+      
+      <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Typ akcie</h2>
+      <label class="flex select-none items-center my-1">
+        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="olympiada sutaz">
+        <span class="slider"></span>
+        Olympiáda / súťaž
+      </label>
+      <label class="flex select-none items-center my-1">
+        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="seminar">
+        <span class="slider"></span>
+        Seminár
+      </label>
+      <label class="flex select-none items-center my-1">
+        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="sustredenie tabor vikendovka">
+        <span class="slider"></span>
+        Sústredenie / víkendovka
+      </label>
+      <label class="flex select-none items-center my-1">
+        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="other prednasky">
+        <span class="slider"></span>
+        Ostatné
       </label>
 
       <button class="mt-6 rounded-lg bg-blue-500 text-white font-bold px-3 py-2 hover:bg-blue-600 text-xs" onclick="close_modal()">Zobraziť výsledky</button>
