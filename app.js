@@ -70,7 +70,7 @@ let DATA_INDEX = []
 let min_loaded_year = 0;
 let max_loaded_year = 0;
 
-let FILTER = /*JSON.parse(localStorage.getItem('filter')) ?? */{
+let FILTER = JSON.parse(localStorage.getItem('filter')) ?? {
 	school: [0, CONSTANTS.school_years.length-1],
 	sciences: Object.keys(CONSTANTS.sciences),
 	countries: Object.keys(CONSTANTS.countries),
