@@ -70,14 +70,18 @@ let DATA_INDEX = []
 let min_loaded_year = 0;
 let max_loaded_year = 0;
 
-let FILTER = JSON.parse(localStorage.getItem('filter')) ?? {
-	school: [0, CONSTANTS.school_years.length-1],
-	sciences: Object.keys(CONSTANTS.sciences),
-	countries: Object.keys(CONSTANTS.countries),
-	types: CONSTANTS.type_combinations,
-	organizers: [...DEFAULT_ORGANIZERS, '*'],
-	default_organizers: DEFAULT_ORGANIZERS,
+function load_new_filter(){
+	return {
+		school: [0, CONSTANTS.school_years.length-1],
+		sciences: Object.keys(CONSTANTS.sciences),
+		countries: Object.keys(CONSTANTS.countries),
+		types: CONSTANTS.type_combinations,
+		organizers: [...DEFAULT_ORGANIZERS, '*'],
+		default_organizers: DEFAULT_ORGANIZERS,
+	}
 }
+let FILTER = JSON.parse(localStorage.getItem('filter')) ?? load_new_filter();
+
 const CALENDAR = jsCalendar.new({
 	target: '#calendar',
 	firstDayOfTheWeek: '2',
@@ -361,7 +365,6 @@ const render = (move_focus = true) => {
 	})
 
 	// Type filter
-	console.log(FILTER.types);
 	visible_events = visible_events.filter((event) => {
 		for (let i = FILTER.types.length - 1; i >= 0; i--) {
 			if (FILTER.types[i].indexOf(event.type) !== -1) return true
@@ -515,13 +518,18 @@ setup_calendar()
 
 // FILTERS
 const filter_update_checked = () => {
-	document.querySelectorAll('.js-filter-checkbox').forEach((elem) => {
-		if (FILTER[elem.dataset.filter].indexOf(elem.value) !== -1) {
-			elem.checked = true
-		} else {
-			elem.checked = false
-		}
-	})
+	try {
+		document.querySelectorAll('.js-filter-checkbox').forEach((elem) => {
+			if (FILTER[elem.dataset.filter].indexOf(elem.value) !== -1) {
+				elem.checked = true
+			} else {
+				elem.checked = false
+			}
+		})
+	} catch {
+		FILTER = load_new_filter();
+		filter_update_checked();
+	}
 }
 
 window.addEventListener('keydown', e => {
