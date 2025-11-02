@@ -12,6 +12,12 @@ const CONSTANTS = {
 		'prednasky': 'prednášky',
 		'other': 'iné',
 	},
+	type_combinations: [
+		"olympiada sutaz",
+		"seminar",
+		"sustredenie tabor vikendovka",
+		"other prednasky"
+	],
 	contestant_types: {
 		'zs': 'ZŠ',
 		'ss': 'SŠ',
@@ -68,6 +74,7 @@ let FILTER = JSON.parse(localStorage.getItem('filter')) ?? {
 	school: [0, CONSTANTS.school_years.length-1],
 	sciences: Object.keys(CONSTANTS.sciences),
 	countries: Object.keys(CONSTANTS.countries),
+	types: CONSTANTS.type_combinations,
 	organizers: [...DEFAULT_ORGANIZERS, '*'],
 	default_organizers: DEFAULT_ORGANIZERS,
 }
@@ -322,32 +329,24 @@ const render = (move_focus = true) => {
 	// Sciences filter
 	visible_events = visible_events.filter((event) => {
 		for (let i = FILTER.sciences.length - 1; i >= 0; i--) {
-			if (event.sciences.indexOf(FILTER.sciences[i]) !== -1) {
-				return true
-			}
+			if (event.sciences.indexOf(FILTER.sciences[i]) !== -1) return true
 		}
-
 		return false
 	})
 
 	// Organizers filter
 	visible_events = visible_events.filter((event) => {
 		for (let i = FILTER.organizers.length - 1; i >= 0; i--) {
-			if (event.organizers.indexOf(FILTER.organizers[i]) !== -1) {
-				return true
-			}
+			if (event.organizers.indexOf(FILTER.organizers[i]) !== -1) return true
 		}
 
 		// Ostatni organizatori
 		if (FILTER.organizers.indexOf('*') !== -1) {
 			if (event.organizers.length === 0) { return true }
 			for (let i = event.organizers.length - 1; i >= 0; i--) {
-				if (FILTER.default_organizers.indexOf(event.organizers[i]) === -1) {
-					return true
-				}
+				if (FILTER.default_organizers.indexOf(event.organizers[i]) === -1) return true
 			}
 		}
-
 		return false
 	})
 
@@ -355,12 +354,18 @@ const render = (move_focus = true) => {
 	visible_events = visible_events.filter((event) => {
 		for (let i = FILTER.countries.length - 1; i >= 0; i--) {
 			for (let j = event.organizers.length - 1; j >= 0; j--){
-				if (ORGANIZERS[event.organizers[j]].country == FILTER.countries[i]){
-					return true
-				}
+				if (ORGANIZERS[event.organizers[j]].country == FILTER.countries[i]) return true
 			}
 		}
+		return false
+	})
 
+	// Type filter
+	console.log(FILTER.types);
+	visible_events = visible_events.filter((event) => {
+		for (let i = FILTER.types.length - 1; i >= 0; i--) {
+			if (FILTER.types[i].indexOf(event.type) !== -1) return true
+		}
 		return false
 	})
 
