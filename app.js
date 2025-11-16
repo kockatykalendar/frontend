@@ -222,6 +222,21 @@ const render_filter = async () => {
 	})
 }
 
+const select_deselect_all = (filter_type) => {
+	let constants = undefined;
+	if (filter_type === 'organizers') constants = [...DEFAULT_ORGANIZERS, '*'];
+	else if (filter_type === 'types') constants = CONSTANTS.type_combinations;
+	else constants = Object.keys(CONSTANTS[filter_type]);
+	
+	if (FILTER[filter_type].length === constants.length) FILTER[filter_type] = [];
+	else FILTER[filter_type] = constants;
+
+	localStorage.setItem('filter', JSON.stringify(FILTER));
+	filter_update_checked();
+	render();
+	CALENDAR.refresh();
+}
+
 // Formatting utilities
 const fmt_contestant = (contestant, prev_contestant) => {
 	if (prev_contestant && prev_contestant.substr(0, 2) === contestant.substr(0, 2)) {
