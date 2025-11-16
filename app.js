@@ -82,6 +82,17 @@ function load_new_filter(){
 }
 let FILTER = JSON.parse(localStorage.getItem('filter')) ?? load_new_filter();
 
+const new_possible_filter = load_new_filter();
+for (const key in FILTER) {
+	if (!new_possible_filter.hasOwnProperty(key)){
+		delete FILTER[key];
+		continue;
+	}
+	if (FILTER[key].length != new_possible_filter[key].length){
+		FILTER[key] = new_possible_filter[key];
+	}
+}
+
 const CALENDAR = jsCalendar.new({
 	target: '#calendar',
 	firstDayOfTheWeek: '2',
