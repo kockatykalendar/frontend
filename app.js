@@ -209,7 +209,7 @@ const render_filter = async () => {
 	html += Mustache.render(FILTER_TEMPLATE, {key: "*", name: "Ostatní"})
 	document.getElementById('org-filter-aside').insertAdjacentHTML('afterend', html)
 	document.getElementById('org-filter-modal').insertAdjacentHTML('afterend', html)
-	
+
 	filter_update_checked()
 	document.querySelectorAll('.js-filter-checkbox').forEach((elem) => elem.onchange = (event) => {
 		const filter_type = event.currentTarget.dataset.filter
@@ -238,7 +238,7 @@ const select_deselect_all = (filter_type) => {
 	if (filter_type === 'organizers') constants = [...DEFAULT_ORGANIZERS, '*'];
 	else if (filter_type === 'types') constants = CONSTANTS.type_combinations;
 	else constants = Object.keys(CONSTANTS[filter_type]);
-	
+
 	if (FILTER[filter_type].length === constants.length) FILTER[filter_type] = [];
 	else FILTER[filter_type] = constants;
 
@@ -345,6 +345,9 @@ let is_initial_scroll = false		// used to prevent calendar from hiding during in
 let first_id = 0
 let last_id = 0
 
+const normalize_string = (str) => { // Remove diacritics and special chars and turn lowercase; used in the search; part from https://stackoverflow.com/a/37511463
+   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();}
+
 const render = (move_focus = true) => {
 	let event_list = document.getElementById('event-list')
 	event_list.innerHTML = ''
@@ -398,15 +401,15 @@ const render = (move_focus = true) => {
 		return false
 	})
 
-	//filter search
-	visible_events = visible_events.filter(x => JSON.stringify(x).includes(document.getElementById('search-input').value))
-	//filter search mobile
-	visible_events = visible_events.filter(x => JSON.stringify(x).includes(document.getElementById('mobile-search-input').value))
+	// Filter search
+	visible_events = visible_events.filter(x => normalize_string(JSON.stringify(x)).includes(normalize_string(document.getElementById('search-input').value)))
+	// Filter search -- mobile
+	visible_events = visible_events.filter(x => normalize_string(JSON.stringify(x)).includes(normalize_string(document.getElementById('mobile-search-input').value)))
 
 	visible_events.forEach((event, index) => {
 		event.id = index
 	})
-	
+
 	const event = visible_events.find(event =>
 		new Date(event.date.end || event.date.start) >= new Date()
 	) ?? visible_events[visible_events.length - 1]
@@ -563,7 +566,7 @@ window.addEventListener('keydown', e => {
 		close_modal();
 		close_search();
 	}
-	if (e.keyCode === 114 || ((e.ctrlKey || e.metaKey) && e.keyCode === 70)) { 
+	if (e.keyCode === 114 || ((e.ctrlKey || e.metaKey) && e.keyCode === 70)) {
 		e.preventDefault();
 		open_search();
 	}
@@ -602,11 +605,11 @@ const scroll_listener = async e => {
 		document.getElementById('js-calendar-placeholder').classList.remove('hidden')
 		document.getElementById('js-calendar-holder').classList.add('hidden')
 	}
-	
+
 	let event_list = document.getElementById('event-list')
-	
+
 	if(clientHeight + scrollTop >= scrollHeight - 100) {
-		
+
 		let old_last_id = last_id;
 		if (last_id > visible_events.length-10) {
 			document.getElementById('scroll').removeEventListener('scroll', scroll_listener)
@@ -618,7 +621,7 @@ const scroll_listener = async e => {
 		last_id = Math.min(last_id + 5, visible_events.length)
 		event_list.insertAdjacentHTML('beforeend', Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(old_last_id, last_id)}, {partial : PARTIAL_EVENT_TEMPLATE}));
 	}
-	
+
 	if(scrollTop < 100) {
 		let event_list = document.getElementById('event-list')
 		let old_first_id = first_id;
@@ -669,7 +672,7 @@ document.querySelectorAll('.double-slider').forEach(parent => {
 			el.value = e.target.value;
 			el.nextElementSibling.firstElementChild.innerHTML = CONSTANTS.school_years[e.target.value];
 		});
-		
+
 		if((parseInt(document.getElementById('v1').value) < parseInt(document.getElementById('v0').value)) && !switched) {
 			e.target.parentNode.classList.toggle('switched');
 			switched = true;
