@@ -27,3 +27,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 </article>`, '')
 	document.getElementById('organizations').innerHTML = orgs_html
 })
+
+
+function tryAutoRedirect(){
+  let last_visit = localStorage.getItem("kk-last_visit", null);
+  localStorage.setItem("kk-last_visit", Date.now());
+  if (last_visit === null) return; // Do not autoredirect if was never visited before
+  if (Date.now() - last_visit > 1000 * 60 * 60 * 8) window.location.href = "terminy.html"; // Auto redirect if was visited at least 8 hours ago
+}

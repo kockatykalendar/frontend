@@ -215,7 +215,7 @@
         <span class="slider cz"></span>
         Česko
       </label>
-      
+
       <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('types');" style="cursor: pointer;">Typ akcie</h2>
       <label class="flex select-none items-center my-1">
         <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="olympiada sutaz">
@@ -370,5 +370,6 @@
   <script src="https://unpkg.com/simple-jscalendar@1.4.4/source/jsCalendar.lang.sk.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.0.1/mustache.min.js" integrity="sha512-6AXIWogbKpsHvoZJrJtHpIYES4wP8czSj0zk7ZfwOYS8GWYFNSykwdfapt7yQc4ikZytemBu+QyVObzBHJMwYg==" crossorigin="anonymous"></script>
   <script src="app.js"></script>
+  <script>localStorage.setItem("kk-last_visit", Date.now()); // Autoredirect from index.html</script>
 </body>
 </html>
