@@ -170,11 +170,11 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .double-slider > output {
 	@apply row-start-1 col-start-1 max-w-max ml-3 transform-gpu;
-	--tw-translate-x: calc((var(--c))/14*17.25rem);
 }
 
 .double-slider > output > span {
 	@apply block rounded px-1.5 text-white transition duration-300 transform-gpu -translate-x-1/2 bg-blue;
+	--tw-translate-x: calc(var(--c)/14*17.25rem - 50%);
 }
 
 .svg {
