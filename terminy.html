@@ -133,6 +133,13 @@
           Ostatné
         </label>
 
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('style');" style="cursor: pointer;">Zobrazenie</h2>
+        <label class="flex select-none items-center my-1">
+          <input class="js-filter-checkbox hidden" type="checkbox" data-filter="style" value="force-science-color">
+          <span class="slider"></span>
+          Vynútiť farbu podľa vedy
+        </label>
+
       </section>
     </aside>
 
@@ -236,6 +243,13 @@
         <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="other prednasky">
         <span class="slider"></span>
         Ostatné
+      </label>
+
+      <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('style');" style="cursor: pointer;">Zobrazenie</h2>
+      <label class="flex select-none items-center my-1">
+        <input class="js-filter-checkbox hidden" type="checkbox" data-filter="style" value="force-science-color">
+        <span class="slider"></span>
+        Vynútiť farbu podľa vedy
       </label>
 
       <button class="mt-6 rounded-lg bg-blue-500 text-white font-bold px-3 py-2 hover:bg-blue-600 text-xs" onclick="close_modal()">Zobraziť výsledky</button>

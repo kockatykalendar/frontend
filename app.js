@@ -60,29 +60,31 @@ CONSTANTS.school_years = [
 	...Array(4).fill().map( (x, i) => `${CONSTANTS.contestant_types['ss']} ${i+1}`),
 	'Starší'
 ]
-
+FORCE_SCIENCE_COLOR = "force-science-color"
 
 const DATA_URL_PREFIX = 'https://data.kockatykalendar.sk/'
+const DEFAULT_STYLE = [FORCE_SCIENCE_COLOR]
+const DEFAULT_ORGANIZERS = ['trojsten', 'p-mat', 'sezam', 'strom', 'riesky', 'nivam']
 let ORGANIZERS = []
-let DEFAULT_ORGANIZERS = ['trojsten', 'p-mat', 'sezam', 'strom', 'riesky', 'nivam']
 let DATA = []
 let DATA_INDEX = []
 let min_loaded_year = 0;
 let max_loaded_year = 0;
 
-function load_new_filter(){
+function load_default_filter() {
 	return {
 		school: [0, CONSTANTS.school_years.length-1],
 		sciences: Object.keys(CONSTANTS.sciences),
 		countries: Object.keys(CONSTANTS.countries),
 		types: CONSTANTS.type_combinations,
 		organizers: [...DEFAULT_ORGANIZERS, '*'],
-		default_organizers: DEFAULT_ORGANIZERS,
+    default_organizers: DEFAULT_ORGANIZERS,
+    style: DEFAULT_STYLE,
 	}
 }
-let FILTER = JSON.parse(localStorage.getItem('filter')) ?? load_new_filter();
+let FILTER = JSON.parse(localStorage.getItem('filter')) ?? load_default_filter();
 
-const new_possible_filter = load_new_filter();
+const new_possible_filter = load_default_filter();
 for (const key in FILTER) {
 	if (!new_possible_filter.hasOwnProperty(key)){
 		delete FILTER[key];
@@ -418,7 +420,16 @@ const render = (move_focus = true) => {
 
 	if (first_id > visible_events.length) first_id = visible_events.length
 	if (last_id > visible_events.length) last_id = visible_events.length
-	event_list.innerHTML = Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, last_id)}, {partial : PARTIAL_EVENT_TEMPLATE});
+
+  let events_to_display = visible_events.slice(first_id, last_id).map((event) => {
+    // Recolor events
+    let new_event = {...event}
+    if (FILTER.style?.includes(FORCE_SCIENCE_COLOR)) new_event.color = CONSTANTS.colors[CONSTANTS.science_color[event.sciences[0]]]
+    return new_event
+  })
+
+  // Render
+  event_list.innerHTML = Mustache.render(EVENT_TEMPLATE, {data: events_to_display}, {partial : PARTIAL_EVENT_TEMPLATE});
 
   [...document.getElementsByClassName("js-event-header")].forEach(node => {
     node.addEventListener("click", () => {
@@ -511,7 +522,7 @@ const setup_calendar = () => {
 		visible_events.forEach(event => {
 			// 3 hour
 			if (Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(event.date.end || event.date.start).getTime()) <= 60000 * 60 * 3) {
-				insert_event(event_container, event.color)
+				insert_event(event_container, FILTER.style?.includes(FORCE_SCIENCE_COLOR) ? CONSTANTS.colors[CONSTANTS.science_color[event.sciences[0]]] : event.color)
 			}
 		});
 	});
@@ -559,7 +570,7 @@ const filter_update_checked = () => {
 			}
 		})
 	} catch {
-		FILTER = load_new_filter();
+		FILTER = load_default_filter();
 		filter_update_checked();
 	}
 }
