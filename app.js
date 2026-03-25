@@ -88,9 +88,6 @@ for (const key in FILTER) {
 		delete FILTER[key];
 		continue;
 	}
-	if (FILTER[key].length != new_possible_filter[key].length){
-		FILTER[key] = new_possible_filter[key];
-	}
 }
 
 const CALENDAR = jsCalendar.new({
