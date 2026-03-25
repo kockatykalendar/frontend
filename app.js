@@ -423,9 +423,15 @@ const render = (move_focus = true) => {
 	if (last_id > visible_events.length) last_id = visible_events.length
 	event_list.innerHTML = Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, last_id)}, {partial : PARTIAL_EVENT_TEMPLATE});
 
-	[...document.getElementsByClassName("js-event-header")].forEach(node => {
+  [...document.getElementsByClassName("js-event-header")].forEach(node => {
+    node.addEventListener("click", () => {
+      node.parentElement.querySelector(".js-event-description").classList.toggle("hidden")
+      node.querySelector(".js-event-icons").classList.toggle("hidden")
+    })
+  });
+	[...document.getElementsByClassName("js-event-description")].forEach(node => {
 		node.addEventListener("click", () => {
-			node.parentElement.querySelector(".js-event-description").classList.toggle("hidden")
+			node.classList.toggle("hidden")
 			node.querySelector(".js-event-icons").classList.toggle("hidden")
 		})
 	})
