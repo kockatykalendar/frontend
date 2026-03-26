@@ -274,14 +274,17 @@ const fmt = {
 		}
 
 		let date_start = new Date(event.date.start)
-		let result = date_start.getDate() + '. ' + CONSTANTS.months[date_start.getMonth()]
+    let result = date_start.getDate() + '. ' + CONSTANTS.months[date_start.getMonth()]
 
 		if (event.date.end) {
-			let date_end = new Date(event.date.end)
-			result += ' – ' + date_end.getDate() + '. ' + CONSTANTS.months[date_end.getMonth()]
-		}
+      let date_end = new Date(event.date.end)
+			if (date_start.getFullYear() != date_end.getFullYear()) result += ' ' + date_start.getFullYear()
 
-		if (date_start.getFullYear() != new Date().getFullYear()) result += ' ' + date_start.getFullYear()
+      result += ' – ' + date_end.getDate() + '. ' + CONSTANTS.months[date_end.getMonth()]
+			if (date_end.getFullYear() != new Date().getFullYear()) result += ' ' + date_end.getFullYear()
+    } else {
+      if (date_start.getFullYear() != new Date().getFullYear()) result += ' ' + date_start.getFullYear()
+    }
 
 		return result
 	},
