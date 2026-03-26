@@ -29,9 +29,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 
-function tryAutoRedirect(){
+function tryAutoRedirect() {
   let last_visit = localStorage.getItem("kk-last_visit", null);
   localStorage.setItem("kk-last_visit", Date.now());
   if (last_visit === null) return; // Do not autoredirect if was never visited before
+  if (sessionStorage.getItem("kk-visited_now") === "true") return; // Do not autoredirect if other page was visited just before
   if (Date.now() - last_visit > 1000 * 60 * 60 * 8) window.location.href = "terminy.html"; // Auto redirect if was visited at least 8 hours ago
 }
