@@ -177,10 +177,13 @@ const load_data = async () => {
 	await render_filter()
 	DATA_INDEX = await load_json(DATA_URL_PREFIX+"index.json")
 	min_loaded_year = new Date().getFullYear() - (new Date().getMonth() < 8)
-	max_loaded_year = min_loaded_year
-	DATA = await load_events(min_loaded_year)
-	await render()
-	CALENDAR.refresh()
+  max_loaded_year = min_loaded_year
+	let old_length = DATA.length ?? 0
+  DATA = await load_events(min_loaded_year)
+  if (DATA.length > old_length) {
+		await render()
+		CALENDAR.refresh()
+	}
 }
 
 const load_events = async year => {
@@ -627,9 +630,10 @@ const scroll_listener = async e => {
 		let old_last_id = last_id;
 		if (last_id > visible_events.length-10) {
 			document.getElementById('scroll').removeEventListener('scroll', scroll_listener)
-			max_loaded_year++
-			DATA = DATA.concat(await load_events(max_loaded_year))
-			render(false)
+      max_loaded_year++
+			let old_length = DATA.length ?? 0
+      DATA = DATA.concat(await load_events(max_loaded_year))
+			if (DATA.length > old_length) render(false)
 			document.getElementById('scroll').addEventListener('scroll', scroll_listener)
 		}
 		last_id = Math.min(last_id + 5, visible_events.length)
@@ -646,9 +650,10 @@ const scroll_listener = async e => {
 			if (new_data.length != 0){
 				first_id += new_data.length
 				old_first_id += new_data.length
-				last_id += new_data.length
-				DATA = new_data.concat(DATA)
-				render(false)
+        last_id += new_data.length
+				let old_length = DATA.length ?? 0
+        DATA = new_data.concat(DATA)
+				if (DATA.length > old_length) render(false)
 				document.getElementById('scroll').addEventListener('scroll', scroll_listener)
 			}
 		}
