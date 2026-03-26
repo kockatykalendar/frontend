@@ -157,15 +157,15 @@
 
   <div class="fixed z-10 overflow-y-auto" id="filter-modal" style="display: none;">
     <div class="fixed min-h-screen w-screen bg-black/25 z-20" onclick="close_modal()"></div>
-    <div class="fixed left-0 right-0 bg-white max-w-xl mx-auto px-8 rounded-lg z-30 mt-5">
-      <div class="flex items-center border-b border-gray-400">
+    <div class="fixed left-0 right-0 bg-white max-w-xl mx-auto rounded-lg z-30 mt-5">
+      <div class="flex items-center border-b border-gray-400 px-8">
           <label for="search-input" id="mobile-search-label">
             <svg width='24' height='24' viewBox='0 0 24 24' fill='none'><path d='M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z' stroke='#06b6d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>
           </label>
           <input class="h-18 appearance-none mx-4 font-semibold flex-auto bg-transparent focus:outline-none" aria-autocomplete="list" aria-labelledby="mobile-search-label" id="mobile-search-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Hľadať udalosť" maxlength="64" type="search">
           <button type="reset" title="Zmaže hľadanie" class="flex-none rounded-lg border border-blue-500 text-blue-500 font-bold px-3 py-2 hover:bg-blue-100 text-xs" onclick="close_search()">Zmaž</button>
       </div>
-      <div style="max-height: 85vh;" class="pb-8 overflow-y-auto">
+      <div style="max-height: calc(80vh - 4rem);" class="pb-4 px-8 overflow-y-auto">
         <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Ročník</h2>
 
         <div class="double-slider" role="group" aria-labelledby="multi-lbl" style="--va: 0; --vb: 14;">
@@ -251,7 +251,9 @@
           Vynútiť farbu podľa vedy
         </label>
 
-        <button class="mt-6 rounded-lg bg-blue-500 text-white font-bold px-3 py-2 hover:bg-blue-600 text-xs" onclick="close_modal()">Zobraziť výsledky</button>
+      </div>
+      <div class="mx-4 py-4">
+        <button class="rounded-lg bg-blue-500 text-white font-bold px-3 py-2 hover:bg-blue-600 text-xs" onclick="close_modal()">Zobraziť výsledky</button>
       </div>
     </div>
   </div>
