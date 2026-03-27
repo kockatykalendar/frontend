@@ -427,7 +427,7 @@ const render = (move_focus = true) => {
 	if (first_id > visible_events.length) first_id = visible_events.length
 	if (last_id > visible_events.length) last_id = visible_events.length
 
-  let events_to_display = visible_events.slice(first_id, last_id).map((event) => {
+  visible_events = visible_events.map((event) => {
     // Recolor events
     let new_event = {...event}
     if (FILTER.style?.includes(FORCE_SCIENCE_COLOR)) new_event.color = CONSTANTS.colors[CONSTANTS.science_color[event.sciences[0]]]
@@ -435,7 +435,7 @@ const render = (move_focus = true) => {
   })
 
   // Render
-  event_list.innerHTML = Mustache.render(EVENT_TEMPLATE, {data: events_to_display}, {partial : PARTIAL_EVENT_TEMPLATE});
+  event_list.innerHTML = Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, last_id)}, {partial : PARTIAL_EVENT_TEMPLATE});
 
   [...document.getElementsByClassName("js-event-header")].forEach(node => {
     node.addEventListener("click", () => {
