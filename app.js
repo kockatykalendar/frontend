@@ -546,7 +546,11 @@ const setup_calendar = () => {
 const scroll_to_id = async (id) => {
   console.log(id)
   while (last_id <= id) await render_events_below()
-  while (first_id >= id - 10) await render_events_above()
+  while (first_id > id - 10) {
+    let old_len = DATA.length
+    await render_events_above()
+    id += DATA.length - old_len
+  }
 
   let id_string = `event-item-${id}`
  	document.getElementById(id_string).animate([{
