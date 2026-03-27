@@ -453,7 +453,7 @@ const render = (move_focus = true) => {
 	if (move_focus) {
 		if (event) {
 			is_initial_scroll = true
-			scroll_to_id(`event-item-${event.id}`)
+			scroll_to_id(event.id)
 		}
 	}
 }
@@ -538,15 +538,18 @@ const setup_calendar = () => {
 		const e = visible_events.find(event =>
 			Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(event.date.end || event.date.start).getTime()) <= 60000 * 60 * 3
 		)
-		if (e) {
-			scroll_to_id(`event-item-${e.id}`)
-		}
+		if (e) scroll_to_id(e.id)
 	});
 	CALENDAR.refresh()
 }
 
-const scroll_to_id = (id) => {
-	document.getElementById(id).animate([{
+const scroll_to_id = async (id) => {
+  console.log(id)
+  while (last_id <= id) await render_events_below()
+  while (first_id >= id - 10) await render_events_above()
+
+  let id_string = `event-item-${id}`
+ 	document.getElementById(id_string).animate([{
 		'backgroundColor': 'rgb(254, 235, 200)',
 		'boxShadow': 'inset 0 0 0 3px rgb(237, 137, 54)',
 		offset: 0.5
@@ -556,7 +559,7 @@ const scroll_to_id = (id) => {
 		iterations: 2
 	});
 	document.getElementById('scroll').scrollTo({
-		top: document.getElementById(id).getBoundingClientRect().top - window.innerHeight / 2 + document.getElementById('scroll').scrollTop,
+		top: document.getElementById(id_string).getBoundingClientRect().top - window.innerHeight / 2 + document.getElementById('scroll').scrollTop,
 		left: 0,
 		behavior: 'smooth'
 	})
@@ -603,6 +606,42 @@ document.querySelectorAll('[type=search]').forEach( parent => {
 	})
 })
 
+const render_events_below = async () => {
+  let event_list = document.getElementById('event-list')
+  let old_last_id = last_id;
+		if (last_id > visible_events.length-10) {
+			document.getElementById('scroll').removeEventListener('scroll', scroll_listener)
+      max_loaded_year++
+			let old_length = DATA.length ?? 0
+      DATA = DATA.concat(await load_events(max_loaded_year))
+			if (DATA.length > old_length) render(false)
+			document.getElementById('scroll').addEventListener('scroll', scroll_listener)
+		}
+		last_id = Math.min(last_id + 5, visible_events.length)
+		event_list.insertAdjacentHTML('beforeend', Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(old_last_id, last_id)}, {partial : PARTIAL_EVENT_TEMPLATE}));
+}
+
+const render_events_above = async () => {
+  let event_list = document.getElementById('event-list')
+  let old_first_id = first_id;
+	if (first_id < 10) {
+		document.getElementById('scroll').removeEventListener('scroll', scroll_listener)
+		min_loaded_year--
+		let new_data = await load_events(min_loaded_year)
+		if (new_data.length != 0){
+			first_id += new_data.length
+			old_first_id += new_data.length
+      last_id += new_data.length
+			let old_length = DATA.length ?? 0
+      DATA = new_data.concat(DATA)
+			if (DATA.length > old_length) render(false)
+			document.getElementById('scroll').addEventListener('scroll', scroll_listener)
+		}
+	}
+	first_id = Math.max(first_id - 5, 0)
+	event_list.insertAdjacentHTML('afterbegin', Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, old_first_id)}, {partial : PARTIAL_EVENT_TEMPLATE}));
+}
+
 let last_scroll = document.getElementById('scroll').scrollTop
 
 const scroll_listener = async e => {
@@ -626,43 +665,8 @@ const scroll_listener = async e => {
 		document.getElementById('js-calendar-holder').classList.add('hidden')
 	}
 
-	let event_list = document.getElementById('event-list')
-
-	if(clientHeight + scrollTop >= scrollHeight - 100) {
-
-		let old_last_id = last_id;
-		if (last_id > visible_events.length-10) {
-			document.getElementById('scroll').removeEventListener('scroll', scroll_listener)
-      max_loaded_year++
-			let old_length = DATA.length ?? 0
-      DATA = DATA.concat(await load_events(max_loaded_year))
-			if (DATA.length > old_length) render(false)
-			document.getElementById('scroll').addEventListener('scroll', scroll_listener)
-		}
-		last_id = Math.min(last_id + 5, visible_events.length)
-		event_list.insertAdjacentHTML('beforeend', Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(old_last_id, last_id)}, {partial : PARTIAL_EVENT_TEMPLATE}));
-	}
-
-	if(scrollTop < 100) {
-		let event_list = document.getElementById('event-list')
-		let old_first_id = first_id;
-		if (first_id < 10) {
-			document.getElementById('scroll').removeEventListener('scroll', scroll_listener)
-			min_loaded_year--
-			let new_data = await load_events(min_loaded_year)
-			if (new_data.length != 0){
-				first_id += new_data.length
-				old_first_id += new_data.length
-        last_id += new_data.length
-				let old_length = DATA.length ?? 0
-        DATA = new_data.concat(DATA)
-				if (DATA.length > old_length) render(false)
-				document.getElementById('scroll').addEventListener('scroll', scroll_listener)
-			}
-		}
-		first_id = Math.max(first_id - 5, 0)
-		event_list.insertAdjacentHTML('afterbegin', Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, old_first_id)}, {partial : PARTIAL_EVENT_TEMPLATE}));
-	}
+  if (clientHeight + scrollTop >= scrollHeight - 100) await render_events_below()
+	if (scrollTop < 100) await render_events_above()
 }
 document.getElementById('scroll').addEventListener('scroll', scroll_listener)
 
