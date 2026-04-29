@@ -546,7 +546,6 @@ const setup_calendar = () => {
 }
 
 const scroll_to_id = async (id) => {
-  console.log(id)
   while (last_id <= id) await render_events_below()
   while (first_id > id - 10) {
     let old_len = DATA.length
