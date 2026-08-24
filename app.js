@@ -297,7 +297,7 @@ const fmt = {
 	},
 
 	pretty_organizers: function(event) {
-		return event.organizers.map((x) => ({'logo': DATA_URL_PREFIX+ORGANIZERS[x].icon, 'name': ORGANIZERS[x].name || x}))
+		return event.organizers.map((x) => ({'logo': DATA_URL_PREFIX+ORGANIZERS[x].icon, 'name': ORGANIZERS[x].name || x, 'web': ORGANIZERS[x].web || '#'}))
 	},
 
 	pretty_contestants: function (event) {

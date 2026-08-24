@@ -282,8 +282,10 @@
             </div>
             <div>
               {{#pretty_organizers}}
-              <img class="ml-4 h-4 inline" alt="{{ name }}" src="{{ logo }}" />
-              {{name}}
+              <a href="{{ web }}" target="_blank">
+                <img class="ml-4 h-4 inline" alt="{{ name }}" src="{{ logo }}" />
+                {{name}}
+              </a>
               {{/pretty_organizers}}
             </div>
           </div>
