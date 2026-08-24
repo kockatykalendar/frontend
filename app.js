@@ -34,7 +34,8 @@ const CONSTANTS = {
 	countries: {
 		"sk": "Slovensko",
 		"cz": "Česko",
-	},
+  },
+	any_country_flag: "international",
 	colors: {
 		'red': '#E53E3E',
 		'orange': '#ED8936',
@@ -394,7 +395,8 @@ const render = (move_focus = true) => {
 	visible_events = visible_events.filter((event) => {
 		for (let i = FILTER.countries.length - 1; i >= 0; i--) {
 			for (let j = event.organizers.length - 1; j >= 0; j--){
-				if (ORGANIZERS[event.organizers[j]].country == FILTER.countries[i]) return true
+        if (ORGANIZERS[event.organizers[j]].country == FILTER.countries[i]) return true
+        if (ORGANIZERS[event.organizers[j]].country == CONSTANTS.any_country_flag) return true
 			}
 		}
 		return false
