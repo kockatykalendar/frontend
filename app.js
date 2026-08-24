@@ -547,6 +547,13 @@ const setup_calendar = () => {
 	CALENDAR.refresh()
 }
 
+const align_calendar_to_event = (event) => {
+  if (!event) return
+  let date = new Date(event.date.end || event.date.start)
+  CALENDAR.set(date)
+  CALENDAR.refresh()
+}
+
 const scroll_to_id = async (id) => {
   while (last_id <= id) await render_events_below()
   while (first_id > id - 10) {
@@ -625,7 +632,8 @@ const render_events_below = async () => {
 			document.getElementById('scroll').addEventListener('scroll', scroll_listener)
 		}
 		last_id = Math.min(last_id + 5, visible_events.length)
-		event_list.insertAdjacentHTML('beforeend', Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(old_last_id, last_id)}, {partial : PARTIAL_EVENT_TEMPLATE}));
+  event_list.insertAdjacentHTML('beforeend', Mustache.render(EVENT_TEMPLATE, { data: visible_events.slice(old_last_id, last_id) }, { partial: PARTIAL_EVENT_TEMPLATE }));
+  // align_calendar_to_event(visible_events[last_id-1]) // No need to as onmouseenter event is now set
 }
 
 const render_events_above = async () => {
@@ -645,8 +653,9 @@ const render_events_above = async () => {
 			document.getElementById('scroll').addEventListener('scroll', scroll_listener)
 		}
 	}
-	first_id = Math.max(first_id - 5, 0)
+  first_id = Math.max(first_id - 5, 0)
 	event_list.insertAdjacentHTML('afterbegin', Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, old_first_id)}, {partial : PARTIAL_EVENT_TEMPLATE}));
+  // align_calendar_to_event(visible_events[first_id]) // No need to as onmouseenter event is now set
 }
 
 let last_scroll = document.getElementById('scroll').scrollTop
