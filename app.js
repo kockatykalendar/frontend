@@ -549,7 +549,7 @@ const setup_calendar = () => {
 
 const align_calendar_to_event = (event) => {
   if (!event) return
-  let date = new Date(event.date.end || event.date.start)
+  let date = (event.date.end && event.date.end.months == event.date.start.months) ? new Date(event.date.end) : new Date(event.date.start)
   CALENDAR.set(date)
   CALENDAR.refresh()
 }
