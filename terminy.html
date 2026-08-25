@@ -139,6 +139,11 @@
           <span class="slider"></span>
           Vynútiť farbu podľa vedy
         </label>
+        <label class="flex select-none items-center my-1">
+          <input class="js-filter-checkbox hidden" type="checkbox" data-filter="style" value="force-description-visible-pc">
+          <span class="slider"></span>
+          Zobraziť všetky popisy udalostí
+        </label>
 
       </section>
     </aside>
@@ -252,6 +257,11 @@
           <span class="slider"></span>
           Vynútiť farbu podľa vedy
         </label>
+        <label class="flex select-none items-center my-1">
+          <input class="js-filter-checkbox hidden" type="checkbox" data-filter="style" value="force-description-visible-mobile">
+          <span class="slider"></span>
+          Zobraziť všetky popisy udalostí
+        </label>
 
       </div>
       <div class="mx-4 py-4">
@@ -304,7 +314,9 @@
           </h2>
 
           {{#info}}
-          <div class="hidden md:block mb-2 mt-1" style="text-align: justify;">{{ info }}</div>
+          <div class="js-event-description-pc">
+            <div class="hidden md:block mb-2 mt-1" style="text-align: justify;">{{ info }}</div>
+          </div>
           {{/info}}
 
           <div class="flex flex-wrap justify-between md:justify-start text-gray-600 w-full mt-1 js-event-icons md:flex">
@@ -337,7 +349,7 @@
         </div>
       </header>
 
-      <div class="mt-2 js-event-description hidden md:hidden">
+      <div class="mt-2 js-event-description-mobile md:hidden">
 
         {{#info}}
         <div class="mt-2" style="text-align: justify;">{{ info }}</div>

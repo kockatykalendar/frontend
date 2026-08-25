@@ -62,9 +62,11 @@ CONSTANTS.school_years = [
 	'Starší'
 ]
 FORCE_SCIENCE_COLOR = "force-science-color"
+FORCE_DESCRIPTION_VISIBLE_PC = "force-description-visible-pc"
+FORCE_DESCRIPTION_VISIBLE_MOBILE = "force-description-visible-mobile"
 
 const DATA_URL_PREFIX = 'https://data.kockatykalendar.sk/'
-const DEFAULT_STYLE = [FORCE_SCIENCE_COLOR]
+const DEFAULT_STYLE = [FORCE_SCIENCE_COLOR, FORCE_DESCRIPTION_VISIBLE_PC]
 const DEFAULT_ORGANIZERS = ['trojsten', 'p-mat', 'sezam', 'strom', 'riesky', 'nivam']
 let ORGANIZERS = []
 let DATA = []
@@ -441,18 +443,8 @@ const render = (move_focus = true) => {
   // Render
   event_list.innerHTML = Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, last_id)}, {partial : PARTIAL_EVENT_TEMPLATE});
 
-  [...document.getElementsByClassName("js-event-header")].forEach(node => {
-    node.addEventListener("click", () => {
-      node.parentElement.querySelector(".js-event-description").classList.toggle("hidden")
-      node.querySelector(".js-event-icons").classList.toggle("hidden")
-    })
-  });
-	[...document.getElementsByClassName("js-event-description")].forEach(node => {
-		node.addEventListener("click", () => {
-			node.classList.toggle("hidden")
-			node.querySelector(".js-event-icons").classList.toggle("hidden")
-		})
-	})
+  // Add description toggle listeners
+  add_description_toggle_listeners(first_id, last_id);
 
 	if (move_focus) {
 		if (event) {
@@ -460,6 +452,25 @@ const render = (move_focus = true) => {
 			scroll_to_id(event.id)
 		}
 	}
+}
+
+const add_description_toggle_listeners = (min_index, max_index) => {
+  for (let i = min_index; i < max_index; i++) {
+    let node = document.getElementById(`event-item-${i}`)
+    node.addEventListener('pointerdown', () => {
+      if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_PC)) {
+        node.querySelector(".js-event-description-pc")?.classList.toggle("hidden")
+        node.querySelector(".js-event-icons")?.classList.toggle("hidden")
+      }
+      if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_MOBILE)) node.querySelector(".js-event-description-mobile")?.classList.toggle("hidden")
+    })
+  }
+  if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_PC)) {
+    [...document.getElementsByClassName("js-event-description-pc")].forEach(node => { node.classList.add("hidden") });
+  }
+  if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_MOBILE)) {
+    [...document.getElementsByClassName("js-event-description-mobile")].forEach(node => { node.classList.add("hidden") });
+  }
 }
 
 const insert_event = (node, color) => {
@@ -631,9 +642,10 @@ const render_events_below = async () => {
 			if (DATA.length > old_length) render(false)
 			document.getElementById('scroll').addEventListener('scroll', scroll_listener)
 		}
-		last_id = Math.min(last_id + 5, visible_events.length)
+  last_id = Math.min(last_id + 5, visible_events.length)
   event_list.insertAdjacentHTML('beforeend', Mustache.render(EVENT_TEMPLATE, { data: visible_events.slice(old_last_id, last_id) }, { partial: PARTIAL_EVENT_TEMPLATE }));
-  // align_calendar_to_event(visible_events[last_id-1]) // No need to as onmouseenter event is now set
+  add_description_toggle_listeners(old_last_id, last_id);
+  align_calendar_to_event(visible_events[last_id-1])
 }
 
 const render_events_above = async () => {
@@ -654,8 +666,9 @@ const render_events_above = async () => {
 		}
 	}
   first_id = Math.max(first_id - 5, 0)
-	event_list.insertAdjacentHTML('afterbegin', Mustache.render(EVENT_TEMPLATE, {data: visible_events.slice(first_id, old_first_id)}, {partial : PARTIAL_EVENT_TEMPLATE}));
-  // align_calendar_to_event(visible_events[first_id]) // No need to as onmouseenter event is now set
+	event_list.insertAdjacentHTML('afterbegin', Mustache.render(EVENT_TEMPLATE, { data: visible_events.slice(first_id, old_first_id) }, { partial: PARTIAL_EVENT_TEMPLATE }));
+  add_description_toggle_listeners(first_id, old_first_id);
+  align_calendar_to_event(visible_events[first_id])
 }
 
 let last_scroll = document.getElementById('scroll').scrollTop
