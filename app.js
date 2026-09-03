@@ -457,7 +457,7 @@ const render = (move_focus = true) => {
 const add_description_toggle_listeners = (min_index, max_index) => {
   for (let i = min_index; i < max_index; i++) {
     let node = document.getElementById(`event-item-${i}`)
-    node.addEventListener('pointerdown', () => {
+    node.addEventListener('click', () => {
       if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_PC)) {
         node.querySelector(".js-event-description-pc")?.classList.toggle("hidden")
         node.querySelector(".js-event-icons")?.classList.toggle("hidden")
