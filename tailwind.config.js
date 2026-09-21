@@ -145,10 +145,6 @@ module.exports = {
         '87': '21.75rem',
         '90': '23rem',
       },
-      cursor: {
-        grab: 'grab',
-        grabbing: 'grabbing',
-      },
       borderWidth: {
         'slider': '0.375rem',
       },

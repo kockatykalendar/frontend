@@ -103,11 +103,11 @@ const CALENDAR = jsCalendar.new({
 })
 
 const open_modal = () => {
-	document.getElementById('filter-modal').style.display = 'block'
+	document.getElementById('filter-modal').classList.remove('hidden')
 }
 
 const close_modal = () => {
-	document.getElementById('filter-modal').style.display = 'none'
+	document.getElementById('filter-modal').classList.add('hidden')
 }
 
 const open_search = () => {

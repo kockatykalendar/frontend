@@ -89,7 +89,7 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .double-slider::after {
-	@apply bg-gradient-to-r;
+	@apply bg-linear-to-r;
 	--mask: linear-gradient(90deg, red calc(.75rem + (var(--va))/14*17.25rem), transparent 0), linear-gradient(90deg, red calc(.75rem + (var(--vb))/14*17.25rem), transparent 0);
 }
 

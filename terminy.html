@@ -37,10 +37,10 @@
     </nav>
   </header>
 
-  <div class="flex overflow-hidden flex-col md:flex-row flex-grow">
+  <div class="flex overflow-hidden flex-col md:flex-row grow">
     <div id="js-calendar-placeholder" class="bg-gray-100 border-b md:border-b-0 md:border-r md:hidden hidden shadow">
       <div class="px-4 py-2 flex items-center justify-between flex-wrap text-gray-700">
-        <h2 class="text-xl text-center font-bold flex-shrink-0 text-gray-700" id="js-calendar-placeholder-month"></h2>
+        <h2 class="text-xl text-center font-bold shrink-0 text-gray-700" id="js-calendar-placeholder-month"></h2>
 
         <div class="flex items-center">
           <svg id="js-calendar-placeholder-filter" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-4"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
@@ -56,16 +56,16 @@
       <section class="px-6 pt-6 mb-6 hidden md:block filter">
         <h2 class="font-bold uppercase text-gray-700 text-sm mb-2">Ročník</h2>
 
-        <div class="double-slider" role="group" aria-labelledby="multi-lbl" style="--va: 0; --vb: 14;">
+        <div class="double-slider [--va:0] [--vb:14]" role="group" aria-labelledby="multi-lbl">
           <label class="sr-only" for="v0">Začiatok intervalu</label>
           <input class="va" type="range" id="v0" min="0" value="0" max="14"/>
-          <output for="v0" style="--c: var(--va)"><span>Mladší</span></output>
+          <output for="v0" class="[--c:var(--va)]"><span>Mladší</span></output>
           <label class="sr-only" for="v1">Koniec intervalu</label>
           <input class="vb" type="range" id="v1" min="0" value="14" max="14"/>
-          <output for="v1" style="--c: var(--vb)"><span>Starší</span></output>
+          <output for="v1" class="[--c:var(--vb)]"><span>Starší</span></output>
         </div>
 
-        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('sciences');" style="cursor: pointer;">Veda</h2>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2 cursor-pointer" onclick="select_deselect_all('sciences');">Veda</h2>
         <label class="flex select-none items-center my-1">
           <input class="js-filter-checkbox hidden" type="checkbox" data-filter="sciences" value="mat">
           <span class="slider mat"></span>
@@ -97,9 +97,9 @@
           Ostatné
         </label>
 
-        <h2 id="org-filter-aside" class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('organizers');" style="cursor: pointer;">Organizátor</h2>
+        <h2 id="org-filter-aside" class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2 cursor-pointer" onclick="select_deselect_all('organizers');">Organizátor</h2>
 
-        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('countries');" style="cursor: pointer;">Krajina</h2>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2 cursor-pointer" onclick="select_deselect_all('countries');">Krajina</h2>
         <label class="flex select-none items-center my-1">
           <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="sk">
           <span class="slider sk"></span>
@@ -111,7 +111,7 @@
           Česko
         </label>
 
-        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('types');" style="cursor: pointer;">Typ akcie</h2>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2 cursor-pointer" onclick="select_deselect_all('types');">Typ akcie</h2>
         <label class="flex select-none items-center my-1">
           <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="olympiada sutaz">
           <span class="slider"></span>
@@ -133,7 +133,7 @@
           Ostatné
         </label>
 
-        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('style');" style="cursor: pointer;">Zobrazenie</h2>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2 cursor-pointer" onclick="select_deselect_all('style');">Zobrazenie</h2>
         <label class="flex select-none items-center my-1">
           <input class="js-filter-checkbox hidden" type="checkbox" data-filter="style" value="force-science-color">
           <span class="slider"></span>
@@ -160,7 +160,7 @@
     </main>
   </div>
 
-  <div class="fixed z-10 overflow-y-auto" id="filter-modal" style="display: none;">
+  <div class="fixed z-10 overflow-y-auto hidden" id="filter-modal">
     <div class="fixed min-h-screen w-screen bg-black/25 z-20" onclick="close_modal()"></div>
     <div class="fixed left-0 right-0 bg-white max-w-xl mx-auto rounded-lg z-30 mt-5">
       <div class="flex items-center border-b border-gray-400 px-8">
@@ -170,21 +170,21 @@
           <input class="h-18 appearance-none mx-4 font-semibold flex-auto bg-transparent focus:outline-none" aria-autocomplete="list" aria-labelledby="mobile-search-label" id="mobile-search-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Hľadať udalosť" maxlength="64" type="search">
           <button type="reset" title="Zmaže hľadanie" class="flex-none rounded-lg border border-blue-500 text-blue-500 font-bold px-3 py-2 hover:bg-blue-100 text-xs" onclick="close_search()">Zmaž</button>
       </div>
-      <div style="max-height: calc(80vh - 4rem);" class="pb-4 px-8 overflow-y-auto">
+      <div class="max-h-[calc(80vh-4rem)] pb-4 px-8 overflow-y-auto">
         <p class="text-center mt-6">Pre viac parametrov scrolluj smerom dolu ⬇️</p>
 
         <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2">Ročník</h2>
 
-        <div class="double-slider" role="group" aria-labelledby="multi-lbl" style="--va: 0; --vb: 14;">
+        <div class="double-slider [--va:0] [--vb:14]" role="group" aria-labelledby="multi-lbl">
           <label class="sr-only" for="v2">Začiatok intervalu</label>
           <input class="va" type="range" id="v2" min="0" value="0" max="14"/>
-          <output for="v2" style="--c: var(--va)"><span>Mladší</span></output>
+          <output for="v2" class="[--c:var(--va)]"><span>Mladší</span></output>
           <label class="sr-only" for="v3">Koniec intervalu</label>
           <input class="vb" type="range" id="v3" min="0" value="14" max="14"/>
-          <output for="v3" style="--c: var(--vb); z-index: 99;"><span>Starší</span></output>
+          <output for="v3" class="[--c:var(--vb)] z-99"><span>Starší</span></output>
         </div>
 
-        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('sciences');" style="cursor: pointer;">Veda</h2>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2 cursor-pointer" onclick="select_deselect_all('sciences');">Veda</h2>
         <label class="flex select-none items-center my-1">
           <input class="js-filter-checkbox hidden" type="checkbox" data-filter="sciences" value="mat">
           <span class="slider mat"></span>
@@ -215,9 +215,9 @@
           <span class="slider otr"></span>
           Ostatné
         </label>
-        <h2 id="org-filter-modal" class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('organizers');" style="cursor: pointer;">Organizátor</h2>
+        <h2 id="org-filter-modal" class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2 cursor-pointer" onclick="select_deselect_all('organizers');">Organizátor</h2>
 
-        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('countries');" style="cursor: pointer;">Krajina</h2>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2 cursor-pointer" onclick="select_deselect_all('countries');">Krajina</h2>
         <label class="flex select-none items-center my-1">
           <input class="js-filter-checkbox hidden" type="checkbox" data-filter="countries" value="sk">
           <span class="slider sk"></span>
@@ -229,7 +229,7 @@
           Česko
         </label>
 
-        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('types');" style="cursor: pointer;">Typ akcie</h2>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2 cursor-pointer" onclick="select_deselect_all('types');">Typ akcie</h2>
         <label class="flex select-none items-center my-1">
           <input class="js-filter-checkbox hidden" type="checkbox" data-filter="types" value="olympiada sutaz">
           <span class="slider"></span>
@@ -251,7 +251,7 @@
           Ostatné
         </label>
 
-        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2" onclick="select_deselect_all('style');" style="cursor: pointer;">Zobrazenie</h2>
+        <h2 class="font-bold uppercase text-gray-700 text-sm mt-6 mb-2 cursor-pointer" onclick="select_deselect_all('style');">Zobrazenie</h2>
         <label class="flex select-none items-center my-1">
           <input class="js-filter-checkbox hidden" type="checkbox" data-filter="style" value="force-science-color">
           <span class="slider"></span>
@@ -282,7 +282,7 @@
     <section class="py-4 px-8 {{ background_color }} {{#is_active}}bg-orange-100{{/is_active}}" id="event-item-{{ id }}"
         onpointerenter="align_calendar_to_event(visible_events[{{ id }}])">
       <header class="flex items-center js-event-header">
-        <div class="rounded-full w-6 h-6 flex-shrink-0 mr-3" style="background: {{ color }};"></div>
+        <div class="rounded-full w-6 h-6 shrink-0 mr-3" style="background: {{ color }};"></div>
         <div class="w-full">
           <div class="flex flex-wrap justify-between text-gray-600 text-sm md:mr-5">
             <div>
@@ -304,7 +304,7 @@
           <h2 class="text-2xl flex items-center md:mr-5">
             {{^cancelled}}{{#volatile}}
               <div class="tooltip relative">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EC8B14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle w-8 mr-1 flex-shrink-0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EC8B14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle w-8 mr-1 shrink-0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               </div>
             {{/volatile}}{{/cancelled}}
             {{#cancelled}}
@@ -315,32 +315,32 @@
 
           {{#info}}
           <div class="js-event-description-pc">
-            <div class="hidden md:block mb-2 mt-1" style="text-align: justify;">{{ info }}</div>
+            <div class="hidden md:block mb-2 mt-1 text-justify">{{ info }}</div>
           </div>
           {{/info}}
 
           <div class="flex flex-wrap justify-between md:justify-start text-gray-600 w-full mt-1 js-event-icons md:flex">
             <div class="flex items-center md:mr-5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info w-4 mr-2 flex-shrink-0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info w-4 mr-2 shrink-0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
               <span>{{ pretty_type }}</span>
             </div>
             <div class="flex items-center md:mr-5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users w-4 mr-2 flex-shrink-0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users w-4 mr-2 shrink-0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
               <span>{{ pretty_contestants }}</span>
             </div>
             <div class="hidden md:flex items-center md:mr-5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book w-4 mr-2 flex-shrink-0"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book w-4 mr-2 shrink-0"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
               <span>{{ pretty_sciences }}</span>
             </div>
             {{#places_defined}}
               <div class="hidden md:flex items-center md:mr-5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin w-4 mr-2 flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin w-4 mr-2 shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 <span>{{ pretty_places }}</span>
               </div>
             {{/places_defined}}
             {{#link}}
             <div class="flex items-center md:mr-5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link w-4 mr-2 flex-shrink-0"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link w-4 mr-2 shrink-0"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
 
               <a target="_blank" href="{{ link }}" class="text-blue-500 hover:text-blue-600" rel="noreferrer">Info</a>
             </div>
@@ -352,21 +352,21 @@
       <div class="mt-2 js-event-description-mobile md:hidden">
 
         {{#info}}
-        <div class="mt-2" style="text-align: justify;">{{ info }}</div>
+        <div class="mt-2 text-justify">{{ info }}</div>
         {{/info}}
 
         <div class="flex flex-wrap justify-between md:justify-start text-gray-600 w-full mt-1 js-event-icons md:flex">
           <div class="flex items-center md:mr-5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info w-4 mr-2 flex-shrink-0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info w-4 mr-2 shrink-0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             <span>{{ pretty_type }}</span>
           </div>
           <div class="flex items-center md:mr-5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users w-4 mr-2 flex-shrink-0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users w-4 mr-2 shrink-0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             <span>{{ pretty_contestants }}</span>
           </div>
           {{#link}}
           <div class="flex items-center md:mr-5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link w-4 mr-2 flex-shrink-0"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link w-4 mr-2 shrink-0"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
 
             <a target="_blank" href="{{ link }}" class="text-blue-500 hover:text-blue-600" rel="noreferrer">Info</a>
           </div>
@@ -374,12 +374,12 @@
         </div>
         <div class="flex flex-wrap justify-between md:justify-start text-gray-600 w-full mt-1 js-event-icons md:flex">
           <div class="flex items-center md:mr-5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book w-4 mr-2 flex-shrink-0"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book w-4 mr-2 shrink-0"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
             <span>{{ pretty_sciences }}</span>
           </div>
           {{#places_defined}}
               <div class="flex items-center md:mr-5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin w-4 mr-2 flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin w-4 mr-2 shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 <span>{{ pretty_places }}</span>
               </div>
           {{/places_defined}}
