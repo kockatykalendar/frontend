@@ -61,9 +61,9 @@ CONSTANTS.school_years = [
 	...Array(4).fill().map( (x, i) => `${CONSTANTS.contestant_types['ss']} ${i+1}`),
 	'Starší'
 ]
-FORCE_SCIENCE_COLOR = "force-science-color"
-FORCE_DESCRIPTION_VISIBLE_PC = "force-description-visible-pc"
-FORCE_DESCRIPTION_VISIBLE_MOBILE = "force-description-visible-mobile"
+const FORCE_SCIENCE_COLOR = "force-science-color"
+const FORCE_DESCRIPTION_VISIBLE_PC = "force-description-visible-pc"
+const FORCE_DESCRIPTION_VISIBLE_MOBILE = "force-description-visible-mobile"
 
 const DATA_URL_PREFIX = 'https://data.kockatykalendar.sk/'
 const DEFAULT_STYLE = [FORCE_SCIENCE_COLOR, FORCE_DESCRIPTION_VISIBLE_PC]
@@ -89,7 +89,7 @@ let FILTER = JSON.parse(localStorage.getItem('filter')) ?? load_default_filter()
 
 const new_possible_filter = load_default_filter();
 for (const key in FILTER) {
-	if (!new_possible_filter.hasOwnProperty(key)){
+	if (!Object.hasOwn(new_possible_filter, key)){
 		delete FILTER[key];
 		continue;
 	}
@@ -155,7 +155,7 @@ const sorting_key = (event) => {
 }
 
 const school_to_int = (school, max) => {
-	return (parseInt(school?.slice(-1), 10) + (school?.substr(0,2) === 'ss')*9) || max*14;
+	return (parseInt(school?.slice(-1), 10) + (school?.slice(0,2) === 'ss')*9) || max*14;
 }
 
 const load_json = async (url) => {
@@ -193,7 +193,7 @@ const load_events = async year => {
 	let ret = await load_json(DATA_URL_PREFIX+DATA_INDEX.find((data) => data.start_year == year)?.filename)
 	ret.forEach((event, index) => {
 		for (const key in fmt) {
-			if (fmt.hasOwnProperty(key)) {
+			if (Object.hasOwn(fmt, key)) {
 				event[key] = fmt[key](event)
 			}
 		}
@@ -255,16 +255,16 @@ const select_deselect_all = (filter_type) => {
 
 // Formatting utilities
 const fmt_contestant = (contestant, prev_contestant) => {
-	if (prev_contestant && prev_contestant.substr(0, 2) === contestant.substr(0, 2)) {
-		return contestant.substr(2)
+	if (prev_contestant && prev_contestant.slice(0, 2) === contestant.slice(0, 2)) {
+		return contestant.slice(2)
 	}
 
-	return CONSTANTS.contestant_types[contestant.substr(0, 2)] + ' ' + contestant.substr(2)
+	return CONSTANTS.contestant_types[contestant.slice(0, 2)] + ' ' + contestant.slice(2)
 }
 
 const fmt = {
 	places_defined: function (event) {
-		return event.hasOwnProperty("places") && event.places.length != 0
+		return Object.hasOwn(event, "places") && event.places.length != 0
 	},
 
 	pretty_places: function (event) {
@@ -610,11 +610,11 @@ const filter_update_checked = () => {
 }
 
 window.addEventListener('keydown', e => {
-	if(!e.isComposing && e.keyCode === 27){
+	if(!e.isComposing && e.key === 'Escape'){
 		close_modal();
 		close_search();
 	}
-	if (e.keyCode === 114 || ((e.ctrlKey || e.metaKey) && e.keyCode === 70)) {
+	if (e.key === 'F3' || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f')) {
 		e.preventDefault();
 		open_search();
 	}
