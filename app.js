@@ -457,7 +457,11 @@ const render = (move_focus = true) => {
 const add_description_toggle_listeners = (min_index, max_index) => {
   for (let i = min_index; i < max_index; i++) {
     let node = document.getElementById(`event-item-${i}`)
-    if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_PC)) node.querySelector(".js-event-description-pc")?.classList.add("hidden")
+    if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_PC)) {
+      node.querySelector(".js-event-description-pc")?.classList.add("hidden")
+    } else {
+      node.classList.remove("cursor-pointer")
+    }
     if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_MOBILE)) node.querySelector(".js-event-description-mobile")?.classList.add("hidden")
 
     node.addEventListener('click', () => {
