@@ -559,8 +559,8 @@ const setup_calendar = () => {
 			}
 			const pin = add_icon(left_side, '<line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path>', () => toggle_calendar_pin(pin), true)
 			add_icon(left_side, '<line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline>', () => { browse_calendar(); CALENDAR.previous() })
-			add_icon(right_side, '<polyline points="18 15 12 9 6 15"></polyline>', close_calendar, true)
 			add_icon(right_side, '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>', open_modal, true)
+			add_icon(right_side, '<polyline points="18 15 12 9 6 15"></polyline>', close_calendar, true)
 			add_icon(right_side, '<line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>', () => { browse_calendar(); CALENDAR.next() })
 		}
 	});
@@ -585,44 +585,62 @@ const setup_calendar = () => {
 		event_container.style.maxHeight = '20px';
 		element.appendChild(event_container)
 
-		// Load from data
-		visible_events.forEach(event => {
-			// 3 hour
-			if (Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(get_representative_date(event)).getTime()) <= 60000 * 60 * 3) {
-				insert_event(event_container, FILTER.style?.includes(FORCE_SCIENCE_COLOR) ? CONSTANTS.colors[CONSTANTS.science_color[event.sciences[0]]] : event.color)
-			}
-		});
+		for (const color of calendar_dots(day_key(date))) insert_event(event_container, color)
 	});
 
 	CALENDAR.onDateClick(function(event, date){
 		browse_calendar()
 		// Scroll to events around clicked date
-		const e = visible_events.find(event =>
-			Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(get_representative_date(event)).getTime()) <= 60000 * 60 * 3
-		)
+		const e = visible_events.find(event => get_representative_date(event) === day_key(date))
 		if (e) scroll_to_id(e.id)
 	});
 	CALENDAR.refresh()
 }
 
+// Calendar dates are local Dates; event dates are 'YYYY-MM-DD' strings
+const day_key = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+
+// Dot colors per day, rebuilt only when visible_events changes instead of scanning all events for every rendered day
+let dots_by_day = new Map()
+let dots_source = null
+const calendar_dots = (day) => {
+  if (dots_source !== visible_events) {
+    dots_source = visible_events
+    dots_by_day = new Map()
+    for (const event of visible_events) {
+      const key = get_representative_date(event)
+      if (!dots_by_day.has(key)) dots_by_day.set(key, [])
+      dots_by_day.get(key).push(FILTER.style?.includes(FORCE_SCIENCE_COLOR) ? CONSTANTS.colors[CONSTANTS.science_color[event.sciences[0]]] : event.color)
+    }
+  }
+  return dots_by_day.get(day) ?? []
+}
+
 const align_calendar_to_event = (event) => {
   if (!event) return
-  let date = new Date(get_representative_date(event))
-  CALENDAR.set(date)
-  CALENDAR.refresh()
+  CALENDAR.set(new Date(get_representative_date(event)))
 }
 
 // The calendar follows the events on screen, unless the user is browsing it (arrows / date click) and hasn't touched the list since
 let followed_event = null
 let calendar_browsed = false
+const FOLLOW_INTERVAL = 200
+let follow_timer = null
+let last_follow = 0
 
+// Throttled: updates at most once per FOLLOW_INTERVAL, always ending on the latest event
 const follow_event_in_calendar = (event) => {
   if (calendar_browsed || !event || event === followed_event) return
   followed_event = event
-  align_calendar_to_event(event)
+  clearTimeout(follow_timer)
+  follow_timer = setTimeout(() => {
+    last_follow = Date.now()
+    align_calendar_to_event(followed_event)
+  }, Math.max(0, last_follow + FOLLOW_INTERVAL - Date.now()))
 }
 
 const browse_calendar = () => {
+  clearTimeout(follow_timer)
   calendar_browsed = true
   followed_event = null
 }
