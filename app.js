@@ -74,6 +74,8 @@ let DATA_INDEX = []
 let min_loaded_year = 0;
 let max_loaded_year = 0;
 
+const ONE_DAY = 86400000
+
 function load_default_filter() {
 	return {
 		school: [0, CONSTANTS.school_years.length-1],
@@ -143,17 +145,6 @@ const close_search = () => {
 	CALENDAR.refresh();
 }
 
-const sorting_key = (event) => {
-	if (event.date.end) {
-		return Math.min(
-			new Date(event.date.end),
-			Math.max(new Date(event.date.start), new Date())
-		)
-	}
-
-	return new Date(event.date.start)
-}
-
 const school_to_int = (school, max) => {
 	return (parseInt(school?.slice(-1), 10) + (school?.slice(0,2) === 'ss')*9) || max*14;
 }
@@ -184,9 +175,24 @@ const load_data = async () => {
 	let old_length = DATA.length ?? 0
   DATA = await load_events(min_loaded_year)
   if (DATA.length > old_length) {
-		await render()
+		render()
 		CALENDAR.refresh()
 	}
+}
+
+const get_representative_date = (event) => {
+  if (!event.date.end) return event.date.start
+  if (new Date(event.date.end).getTime() - new Date(event.date.start).getTime() <= ONE_DAY * 13) return event.date.start
+  return event.date.end
+}
+
+const sorting_key = (event) => {
+  return [
+    event.is_past ? 0 : event.is_active ? 1 : 2,
+    new Date(get_representative_date(event)).getTime(),
+    new Date(event.date.end ?? event.date.start).getTime(),
+    new Date(event.date.start).getTime()
+  ]
 }
 
 const load_events = async year => {
@@ -199,11 +205,13 @@ const load_events = async year => {
 		}
 	})
 
-	ret.sort((a, b) => {
-		if (a.is_active && b.is_active) {
-			return new Date(a.date.start) - new Date(b.date.start)
-		}
-		return sorting_key(a) - sorting_key(b)
+  ret.sort((a, b) => {
+    let sa = sorting_key(a), sb = sorting_key(b)
+    for (let i = 0; i < sa.length; i++) {
+      if (sa[i] == sb[i]) continue
+      return sa[i] - sb[i]
+    }
+    return 0
 	})
 	return ret;
 }
@@ -331,21 +339,23 @@ const fmt = {
 	},
 
 	background_color: function(event) {
-		const date_end = new Date(event.date.end || event.date.start).getTime() + 86400000
+		const date_end = new Date(event.date.end || event.date.start).getTime() + ONE_DAY
 		return date_end <= new Date().getTime() ? 'opacity-50 hover:opacity-100 transition-opacity duration-200 ease-in-out' : ''
-	},
+  },
+
+  is_past: function (event) {
+    return new Date(event.date.end || event.date.start).getTime() + ONE_DAY < new Date().getTime()
+  },
 
 	is_active: function (event) {
-		if (event.cancelled) {
-			return false
-		}
+		if (event.cancelled) return false
+		return new Date(event.date.start).getTime() <= new Date().getTime() && new Date().getTime() < new Date(event.date.end ?? event.date.start).getTime() + ONE_DAY
+  },
 
-		if (event.date.end) {
-			return new Date(event.date.start).getTime() <= new Date().getTime() && new Date().getTime() < new Date(event.date.end).getTime() + 86400000
-		}
-
-		return new Date(event.date.start).getTime() <= new Date().getTime() && new Date().getTime() < new Date(event.date.start).getTime() + 86400000
-	}
+  // Not used
+  // is_future: function (event) {
+  //   return new Date(event.date.start).getTime() > new Date().getTime()
+  // }
 }
 
 const EVENT_TEMPLATE = document.getElementById('template-main').innerHTML;
@@ -543,7 +553,7 @@ const setup_calendar = () => {
 		// Load from data
 		visible_events.forEach(event => {
 			// 3 hour
-			if (Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(event.date.end || event.date.start).getTime()) <= 60000 * 60 * 3) {
+			if (Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(get_representative_date(event)).getTime()) <= 60000 * 60 * 3) {
 				insert_event(event_container, FILTER.style?.includes(FORCE_SCIENCE_COLOR) ? CONSTANTS.colors[CONSTANTS.science_color[event.sciences[0]]] : event.color)
 			}
 		});
@@ -552,7 +562,7 @@ const setup_calendar = () => {
 	CALENDAR.onDateClick(function(event, date){
 		// Scroll to events around clicked date
 		const e = visible_events.find(event =>
-			Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(event.date.end || event.date.start).getTime()) <= 60000 * 60 * 3
+			Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(get_representative_date(event)).getTime()) <= 60000 * 60 * 3
 		)
 		if (e) scroll_to_id(e.id)
 	});
@@ -561,7 +571,7 @@ const setup_calendar = () => {
 
 const align_calendar_to_event = (event) => {
   if (!event) return
-  let date = (event.date.end && event.date.end.months == event.date.start.months) ? new Date(event.date.end) : new Date(event.date.start)
+  let date = new Date(get_representative_date(event))
   CALENDAR.set(date)
   CALENDAR.refresh()
 }
