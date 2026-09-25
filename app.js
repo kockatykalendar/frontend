@@ -112,6 +112,33 @@ const close_modal = () => {
 	document.getElementById('filter-modal').classList.add('hidden')
 }
 
+let calendar_pinned = false
+
+// The scroll area moves when the calendar above it shows/hides; shift it back so visible events stay put
+const toggle_calendar_keeping_scroll = (show) => {
+	const scroll = document.getElementById('scroll')
+	const top_before = scroll.getBoundingClientRect().top
+	document.getElementById('js-calendar-placeholder').classList.toggle('hidden', show)
+	document.getElementById('js-calendar-holder').classList.toggle('hidden', !show)
+	scroll.scrollTop += scroll.getBoundingClientRect().top - top_before
+}
+
+const open_calendar = () => {
+	toggle_calendar_keeping_scroll(true)
+	last_scroll = document.getElementById('scroll').scrollTop
+}
+
+const close_calendar = () => {
+	if (document.getElementById('js-calendar-holder').classList.contains('hidden')) return
+	toggle_calendar_keeping_scroll(false)
+}
+
+const toggle_calendar_pin = (icon) => {
+	calendar_pinned = !calendar_pinned
+	icon.setAttribute('fill', calendar_pinned ? 'currentColor' : 'none')
+	last_scroll = document.getElementById('scroll').scrollTop
+}
+
 const open_search = () => {
 	const anim = document.getElementById('search-modal').animate(
 		[{transform: "translateY(5rem)"}],
@@ -175,7 +202,7 @@ const load_data = async () => {
 	let old_length = DATA.length ?? 0
   DATA = await load_events(min_loaded_year)
   if (DATA.length > old_length) {
-		render()
+		await render()
 		CALENDAR.refresh()
 	}
 }
@@ -511,22 +538,30 @@ const setup_calendar = () => {
 			icon.setAttribute('stroke-width', '2')
 			icon.setAttribute('stroke-linecap', 'round')
 			icon.setAttribute('stroke-linejoin', 'round')
-			// Setup arrows & filter
-			//filter icon
-			let filter = icon.cloneNode()
-			filter.setAttribute('class', 'md:hidden')
-			filter.setAttribute('style', 'margin: 10px 8px;')	// We can't use tailwind, because .jsCalendar * sets everything to 0 and takes precedence.
-			filter.innerHTML = '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>'
-			filter.addEventListener('click', open_modal)
-			element.parentElement.getElementsByClassName('jsCalendar-title-right')[0].appendChild(filter)
-			//right arrow
-			let right_arrow = icon.cloneNode()
-			right_arrow.innerHTML = '<line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>';
-			element.parentElement.getElementsByClassName('jsCalendar-nav-right')[0].appendChild(right_arrow)
-			//left arrow
-			let left = icon.cloneNode()
-			left.innerHTML = '<line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline>';
-			element.parentElement.getElementsByClassName('jsCalendar-nav-left')[0].appendChild(left)
+			const title = element.parentElement
+			const left_side = title.getElementsByClassName('jsCalendar-title-left')[0]
+			const right_side = title.getElementsByClassName('jsCalendar-title-right')[0]
+			// Floats come before the month name, so on narrow screens the name wraps instead of pushing icons out
+			left_side.after(right_side)
+			// jsCalendar's own nav buttons are replaced by arrow icons consistent with the others
+			for (const nav of title.querySelectorAll('.jsCalendar-nav-left, .jsCalendar-nav-right')) nav.remove()
+
+			// Floated icons, outermost first; the right ones occupy the same spots as the filter/open icons of the closed calendar bar (7px/9px margins offset the table's 1px border)
+			// We can't use tailwind for margins, because .jsCalendar * sets everything to 0 and takes precedence.
+			const add_icon = (side, paths, on_click, mobile_only) => {
+				const el = icon.cloneNode()
+				if (mobile_only) el.setAttribute('class', 'md:hidden')
+				el.setAttribute('style', side === left_side ? 'margin: 10px 8px; float: left;' : 'margin: 10px 7px 10px 9px; float: right;')
+				el.innerHTML = paths
+				el.addEventListener('click', on_click)
+				side.appendChild(el)
+				return el
+			}
+			const pin = add_icon(left_side, '<line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path>', () => toggle_calendar_pin(pin), true)
+			add_icon(left_side, '<line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline>', () => { browse_calendar(); CALENDAR.previous() })
+			add_icon(right_side, '<polyline points="18 15 12 9 6 15"></polyline>', close_calendar, true)
+			add_icon(right_side, '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>', open_modal, true)
+			add_icon(right_side, '<line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>', () => { browse_calendar(); CALENDAR.next() })
 		}
 	});
 
@@ -560,6 +595,7 @@ const setup_calendar = () => {
 	});
 
 	CALENDAR.onDateClick(function(event, date){
+		browse_calendar()
 		// Scroll to events around clicked date
 		const e = visible_events.find(event =>
 			Math.abs(new Date(date.toString('YYYY-MM-DD')).getTime() - new Date(get_representative_date(event)).getTime()) <= 60000 * 60 * 3
@@ -574,6 +610,36 @@ const align_calendar_to_event = (event) => {
   let date = new Date(get_representative_date(event))
   CALENDAR.set(date)
   CALENDAR.refresh()
+}
+
+// The calendar follows the events on screen, unless the user is browsing it (arrows / date click) and hasn't touched the list since
+let followed_event = null
+let calendar_browsed = false
+
+const follow_event_in_calendar = (event) => {
+  if (calendar_browsed || !event || event === followed_event) return
+  followed_event = event
+  align_calendar_to_event(event)
+}
+
+const browse_calendar = () => {
+  calendar_browsed = true
+  followed_event = null
+}
+
+const follow_list_again = () => {
+  calendar_browsed = false
+}
+
+const follow_touched_event = (event) => {
+  follow_list_again()
+  follow_event_in_calendar(event)
+}
+
+const align_calendar_to_top_event = () => {
+  const rect = document.getElementById('scroll').getBoundingClientRect()
+  const node = document.elementFromPoint(rect.left + rect.width / 2, rect.top + 16)?.closest('[id^="event-item-"]')
+  follow_event_in_calendar(node && visible_events[node.id.slice('event-item-'.length)])
 }
 
 const scroll_to_id = async (id) => {
@@ -656,7 +722,6 @@ const render_events_below = async () => {
   last_id = Math.min(last_id + 5, visible_events.length)
   event_list.insertAdjacentHTML('beforeend', Mustache.render(EVENT_TEMPLATE, { data: visible_events.slice(old_last_id, last_id) }, { partial: PARTIAL_EVENT_TEMPLATE }));
   add_description_toggle_listeners(old_last_id, last_id);
-  align_calendar_to_event(visible_events[last_id-1])
 }
 
 const render_events_above = async () => {
@@ -679,13 +744,13 @@ const render_events_above = async () => {
   first_id = Math.max(first_id - 5, 0)
 	event_list.insertAdjacentHTML('afterbegin', Mustache.render(EVENT_TEMPLATE, { data: visible_events.slice(first_id, old_first_id) }, { partial: PARTIAL_EVENT_TEMPLATE }));
   add_description_toggle_listeners(first_id, old_first_id);
-  align_calendar_to_event(visible_events[first_id])
 }
 
 let last_scroll = document.getElementById('scroll').scrollTop
 
 const scroll_listener = async e => {
 	const { scrollTop, scrollHeight, clientHeight } = document.getElementById('scroll')
+	align_calendar_to_top_event()
 
 	if (is_initial_scroll) {
 		last_scroll = scrollTop
@@ -700,23 +765,17 @@ const scroll_listener = async e => {
 	}
 
 	last_scroll = Math.min(last_scroll, scrollTop)
-	if (Math.abs(scrollTop - last_scroll) > 200) {
-		document.getElementById('js-calendar-placeholder').classList.remove('hidden')
-		document.getElementById('js-calendar-holder').classList.add('hidden')
-	}
+	if (!calendar_pinned && Math.abs(scrollTop - last_scroll) > 200) close_calendar()
 
   if (clientHeight + scrollTop >= scrollHeight - 100) await render_events_below()
 	if (scrollTop < 100) await render_events_above()
 }
 document.getElementById('scroll').addEventListener('scroll', scroll_listener)
+for (const type of ['wheel', 'touchstart', 'pointerdown']) document.getElementById('scroll').addEventListener(type, follow_list_again, { passive: true })
 
 
 document.getElementById('js-calendar-placeholder-filter').addEventListener('click', open_modal)
-document.getElementById('js-calendar-placeholder-open').addEventListener('click', () => {
-	document.getElementById('js-calendar-placeholder').classList.add('hidden')
-	document.getElementById('js-calendar-holder').classList.remove('hidden')
-	last_scroll = document.getElementById('scroll').scrollTop
-})
+document.getElementById('js-calendar-placeholder-open').addEventListener('click', open_calendar)
 
 
 let switched = false;

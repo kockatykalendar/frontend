@@ -100,11 +100,6 @@
 	user-select: none;
 }
 
-.jsCalendar.kk thead .jsCalendar-nav-left:after,
-.jsCalendar.kk thead .jsCalendar-nav-right:after {
-	content: "" !important;
-}
-
 .jsCalendar.kk thead .jsCalendar-title {
 	text-align: center;
 	width: 100%;
@@ -116,7 +111,7 @@
 	margin: 0 auto 0 auto;
 	width: auto;
 	color: rgba(74,85,104,1);
-	font-size: 1.25rem;
+	font-size: clamp(0.75rem, 12.5vw - 1.75rem, 1.25rem);	/* "September 2026" must fit between 5 header icons down to 320px */
 	font-weight: 700;
 	display: contents;
 }
@@ -189,11 +184,6 @@
 .jsCalendar.kk tbody td.jsCalendar-next,
 .jsCalendar.kk tbody td.jsCalendar-previous {
 	color: rgba(74,85,104,0.2);
-}
-
-.jsCalendar-nav-right, .jsCalendar-nav-left {
-	height: 24px !important;
-	width: 24px !important;
 }
 
 .calendar-event-container {
