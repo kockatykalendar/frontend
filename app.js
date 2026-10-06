@@ -501,11 +501,9 @@ const add_description_toggle_listeners = (min_index, max_index) => {
     }
     if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_MOBILE)) node.querySelector(".js-event-description-mobile")?.classList.add("hidden")
 
-    node.addEventListener('click', () => {
-      if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_PC)) {
-        node.querySelector(".js-event-description-pc")?.classList.toggle("hidden")
-        node.querySelector(".js-event-icons")?.classList.toggle("md:hidden")
-      }
+    node.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return
+      if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_PC)) node.querySelector(".js-event-description-pc")?.classList.toggle("hidden")
       if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_MOBILE)) node.querySelector(".js-event-description-mobile")?.classList.toggle("hidden")
     })
   }
