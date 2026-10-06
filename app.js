@@ -97,6 +97,18 @@ const save_setting = (key, value) => {
 	if (PERSIST) localStorage.setItem(key, value)
 }
 
+// Once the visitor changes the filter, the URL's query string no longer describes the page
+const drop_url_filter = () => {
+	if (!location.search) return
+	history.replaceState(null, '', location.pathname)
+	document.getElementById('open-page').href = location.href
+}
+
+const save_filter = () => {
+	drop_url_filter()
+	save_setting('filter', JSON.stringify(FILTER))
+}
+
 const filter_from_params = (params) => {
 	const filter = load_default_filter()
 	if (params.get('organizers')) filter.organizers = params.get('organizers').split(',')
@@ -280,13 +292,13 @@ const render_filter = async () => {
 
 		if (checked && FILTER[filter_type].indexOf(value) === -1) {
 			FILTER[filter_type].push(value)
-			save_setting('filter', JSON.stringify(FILTER));
+			save_filter();
 			filter_update_checked()
 		}
 
 		if (!checked && FILTER[filter_type].indexOf(value) !== -1) {
 			FILTER[filter_type] = FILTER[filter_type].filter((x) => x != value)
-			save_setting('filter', JSON.stringify(FILTER));
+			save_filter();
 			filter_update_checked()
 		}
 
@@ -304,7 +316,7 @@ const select_deselect_all = (filter_type) => {
 	if (FILTER[filter_type].length === constants.length) FILTER[filter_type] = [];
 	else FILTER[filter_type] = constants;
 
-	save_setting('filter', JSON.stringify(FILTER));
+	save_filter();
 	filter_update_checked();
 	render();
 	CALENDAR.refresh();
@@ -742,6 +754,7 @@ window.addEventListener('keydown', e => {
 let search_timer = 0;
 document.querySelectorAll('[type=search]').forEach( parent => {
 	parent.addEventListener('input', e => {
+		drop_url_filter();
 		clearTimeout(search_timer);
 		search_timer = setTimeout(() => {
 			render();
@@ -873,7 +886,7 @@ document.querySelectorAll('.double-slider').forEach(parent => {
 
 		if (e.target.className == 'va') FILTER.school[0] = e.target.value;
 		else FILTER.school[1] = e.target.value;
-		save_setting('filter', JSON.stringify(FILTER));
+		save_filter();
 
 		clearTimeout(slider_timer);
 		slider_timer = setTimeout(() => {
