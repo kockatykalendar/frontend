@@ -21,7 +21,7 @@
   <script defer data-domain="kockatykalendar.sk" src="https://analytics.trojsten.sk/js/script.js"></script>
 </head>
 <body class="antialiased max-h-screen h-screen flex flex-col">
-  <header class="bg-blue-500 text-white">
+  <header id="site-header" class="bg-blue-500 text-white">
     <nav class="px-4 md:px-6 flex justify-center md:justify-between items-center py-4 flex-col md:flex-row">
       <a href="index.html" class="font-bold text-xl mb-1 md:mb-0">KockatýKalendár.sk</a>
 
@@ -36,6 +36,8 @@
       </ul>
     </nav>
   </header>
+  <!-- Replaces the header inside an iframe: opens this page, with the same filter, outside the iframe -->
+  <a id="open-page" target="_blank" rel="noopener" class="hidden fixed bottom-4 right-4 z-10 rounded-lg bg-blue-500 text-white font-bold px-4 py-2 text-lg shadow hover:bg-blue-600">KockatýKalendár.sk</a>
 
   <div class="flex overflow-hidden flex-col md:flex-row grow">
     <div id="js-calendar-placeholder" class="bg-gray-100 border-b md:border-b-0 md:border-r md:hidden hidden shadow">
@@ -282,7 +284,7 @@
     <section class="py-4 px-8 {{ background_color }} {{#is_active}}bg-orange-100{{/is_active}} {{#info}}cursor-pointer{{/info}}" id="event-item-{{ id }}"
         onpointerenter="if (event.pointerType === 'mouse') follow_touched_event(visible_events[{{ id }}])">
       <header class="flex items-center js-event-header">
-        <div class="rounded-full w-6 h-6 shrink-0 mr-3" style="background: {{ color }};"></div>
+        <div class="rounded-full w-6 h-6 shrink-0 mr-3" style="background: {{ display_color }};"></div>
         <div class="w-full">
           <div class="flex flex-wrap justify-between text-gray-600 text-sm md:mr-5">
             <div>

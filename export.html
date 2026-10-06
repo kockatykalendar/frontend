@@ -34,9 +34,9 @@
             </ul>
         </nav>
     </header>
-    <main class="overflow-y-scroll">
+    <main class="overflow-y-scroll px-4 md:px-0">
 
-        <div class="mx-auto max-w-4xl p-8">
+        <div class="mx-auto max-w-4xl pt-8">
             <h2 class="font-bold mt-8 mb-6 text-center text-3xl">Kockatý Kalendár v tvojom kalendári</h2>
             <div class="mx-auto max-w-2xl text-center">
                 <p>
@@ -46,65 +46,63 @@
             </div>
 
 
-            <h2 class="font-bold mt-12 text-center text-2xl">Predvoľby kalendára</h2>
-            <div x-data="{ school: 'any', science: 'any' }">
-                <h3 class="font-bold mt-8 mb-4 text-lg uppercase text-gray-700 tracking-wide">Ročník</h3>
+            <h3 class="font-bold mt-12 text-center text-2xl">Predvoľby kalendára</h3>
+                <h4 class="font-bold mt-8 mb-4 text-lg uppercase text-gray-700 tracking-wide">Ročníky</h4>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-center text-lg font-bold">
-                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': school === 'any' }" @click="school = 'any'">
+                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" data-choice="school" data-value="any" data-selected="bg-blue-500 text-white">
                         Všetky
                     </div>
-                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': school === 'zs' }" @click="school = 'zs'">
+                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" data-choice="school" data-value="zs" data-selected="bg-blue-500 text-white">
                         Základná škola
                     </div>
-                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': school === 'ss' }" @click="school = 'ss'">
+                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" data-choice="school" data-value="ss" data-selected="bg-blue-500 text-white">
                         Stredná škola
                     </div>
                 </div>
 
-                <h3 class="font-bold mt-8 mb-4 text-lg uppercase text-gray-700 tracking-wide">Veda</h3>
+                <h4 class="font-bold mt-8 mb-4 text-lg uppercase text-gray-700 tracking-wide">Veda</h4>
 
-                <div class="mx-auto max-w-4xl grid grid-cols-1 md:grid-cols-5 gap-3 text-center text-md font-bold">
-                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': science === 'any' }" @click="science = 'any'">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-center text-md font-bold">
+                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" data-choice="science" data-value="any" data-selected="bg-blue-500 text-white">
                         Všetky
                     </div>
-                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': science === 'mat' }" @click="science = 'mat'">
+                    <!-- Colors match the science colors on terminy.html (CONSTANTS.science_color in app.js) -->
+                    <div class="shadow border-2 border-blue rounded-full px-2 py-4 cursor-pointer" data-choice="science" data-value="mat" data-selected="bg-blue text-white">
                         Matematika
                     </div>
-                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': science === 'fyz' }" @click="science = 'fyz'">
+                    <div class="shadow border-2 border-orange rounded-full px-2 py-4 cursor-pointer" data-choice="science" data-value="fyz" data-selected="bg-orange text-white">
                         Fyzika
                     </div>
-                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': science === 'inf' }" @click="science = 'inf'">
+                    <div class="shadow border-2 border-green rounded-full px-2 py-4 cursor-pointer" data-choice="science" data-value="inf" data-selected="bg-green text-white">
                         Informatika
                     </div>
-                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': science === 'bio' }" @click="science = 'bio'">
+                    <div class="shadow border-2 border-yellow rounded-full px-2 py-4 cursor-pointer" data-choice="science" data-value="bio" data-selected="bg-yellow text-gray-900">
                         Biológia
                     </div>
-                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': science === 'chem' }" @click="science = 'chem'">
+                    <div class="shadow border-2 border-purple rounded-full px-2 py-4 cursor-pointer" data-choice="science" data-value="chem" data-selected="bg-purple text-white">
                         Chémia
                     </div>
-                    <div class="shadow border rounded-full px-2 py-4 cursor-pointer" :class="{ 'bg-blue-500 text-white': science === 'other' }" @click="science = 'other'">
+                    <div class="shadow border-2 border-red rounded-full px-2 py-4 cursor-pointer" data-choice="science" data-value="other" data-selected="bg-red text-white">
                         Ostatné
                     </div>
                 </div>
 
-                <h2 class="font-bold mt-12 mb-6 text-center text-2xl">Adresa zvoleného kalendára</h2>
+            <h3 class="font-bold mt-12 mb-6 text-center text-2xl">Adresa zvoleného kalendára</h3>
+            <div id="ical-url" class="bg-gray-400 px-4 py-3 rounded-lg text-2xl font-mono"></div>
+            <p class="text-sm text-gray-700 mt-2">Ak chceš v kalendári viacero vied / ročníkov, pridaj každý zvlášť.</p>
 
-                <div class="bg-gray-400 px-4 py-3 rounded-lg text-2xl font-mono">https://ical.kockatykalendar.sk/<span x-text="school"></span>/<span x-text="science"></span>.ics</div>
-                <p class="text-sm text-gray-700 mt-2">Ak chceš v kalendári viacero vied / ročníkov, pridaj každý zvlášť.</p>
-            </div>
-
-            <h2 class="font-bold mt-12 text-center text-3xl">Ako na to?</h2>
+            <h3 class="font-bold mt-12 mb-6 text-center text-2xl">Ako si pridať kalendár</h3>
             <p class="mx-auto max-w-2xl text-center mt-6">
                 Kockatý Kalendár si môžeš jednoducho pridať do svojho kalendára. Nevieš, ako na to? Nevadí! Pripravili sme si pre teba
                 krátke návody.
             </p>
         </div>
 
-        <div class="mx-auto container p-8 mb-12">
+        <div class="mx-auto container py-8 md:px-8 mb-12">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 justify-center">
                 <div class="border rounded-lg p-8 shadow">
-                    <h2 class="mb-2 font-bold text-2xl">Google Calendar</h2>
+                    <h3 class="mb-2 font-bold text-2xl">Google Calendar</h3>
                     <ol class="list-decimal ml-6 space-y-1">
                         <li>Otvoríš <a href="https://calendar.google.com" class="underline text-blue-600" rel="noopener" target="_blank">calendar.google.com</a></li>
                         <li>Na ľavej strane v zozname kalendárov klikni na "+"</li>
@@ -115,7 +113,7 @@
                     </ol>
                 </div>
                 <div class="border rounded-lg p-8 shadow">
-                    <h2 class="mb-2 font-bold text-2xl">Outlook</h2>
+                    <h3 class="mb-2 font-bold text-2xl">Outlook</h3>
                     <ol class="list-decimal ml-6 space-y-1">
                         <li>Otvoríš si <a href="https://outlook.office.com/calendar/" class="underline text-blue-600" rel="noopener" target="_blank">Outlook Kalendár</a></li>
                         <li>Na ľavej strane klikni na "Pridať kalendár"</li>
@@ -127,15 +125,117 @@
                     </ol>
                 </div>
                 <div class="border rounded-lg p-8 shadow text-gray-600">
-                    <h2 class="mb-2 font-bold text-2xl">Niečo iné?</h2>
+                    <h3 class="mb-2 font-bold text-2xl">Niečo iné?</h3>
                     <p>
                         Ak používaš niečo iné, čo by sme sem mali doplniť, <a href="mailto:kockaty.kalendar@trojsten.sk" class="underline text-blue-400">daj nám vedieť!</a>
                     </p>
                 </div>
             </div>
         </div>
+
+        <div class="mx-auto max-w-4xl">
+            <h2 class="font-bold mt-8 mb-6 text-center text-3xl">Kockatý Kalendár na tvojej stránke</h2>
+            <div class="mx-auto max-w-2xl text-center">
+                <p>
+                    Chceš si zobraziť Kockatý Kalendár priamo na svojej stránke? Žiadny problém! Stačí si skopírovať nasledujúci kód a vložiť ho na svoju stránku.
+                    Ročník a veda sa preberajú z predvolieb kalendára vyššie.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                <label class="block">
+                    <span class="font-bold text-lg uppercase text-gray-700 tracking-wide">Organizátor</span>
+                    <input id="organizer" type="text" list="kk-organizers" value="trojsten" placeholder="všetci organizátori"
+                        class="mt-2 block w-full border rounded-lg px-4 py-3 shadow focus:outline-none focus:border-blue-500">
+                    <datalist id="kk-organizers"></datalist>
+                    <span class="text-sm text-gray-700">Napríklad "Trojsten". Viac organizátorov oddeľ čiarkou.</span>
+                </label>
+                <label class="block">
+                    <span class="font-bold text-lg uppercase text-gray-700 tracking-wide">Hľadaný text</span>
+                    <input id="search" type="text" placeholder="napr. olympiáda"
+                        class="mt-2 block w-full border rounded-lg px-4 py-3 shadow focus:outline-none focus:border-blue-500">
+                    <span class="text-sm text-gray-700">Zobrazia sa len akcie, ktoré tento text obsahujú, podobne ako pri vyhľadávaní v Termínoch.</span>
+                </label>
+            </div>
+
+            <h4 class="font-bold mt-8 mb-4 text-lg uppercase text-gray-700 tracking-wide">Šírka</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-center text-sm font-bold">
+                <div class="shadow border rounded-full px-2 py-2 cursor-pointer" data-choice="width" data-value="1000" data-selected="bg-blue-500 text-white">
+                    Široký (zobrazenie ako na počítači)
+                </div>
+                <div class="shadow border rounded-full px-2 py-2 cursor-pointer" data-choice="width" data-value="767" data-selected="bg-blue-500 text-white">
+                    Úzky (zobrazenie ako na mobile)
+                </div>
+            </div>
+
+
+            <h3 class="font-bold mt-12 mb-6 text-center text-2xl">Kód na skopírovanie</h3>
+            <div class="relative mt-6">
+                <pre id="iframe-code" class="bg-gray-400 pl-4 pr-28 py-3 rounded-lg font-mono whitespace-pre-wrap break-all"></pre>
+                <button id="copy" type="button"
+                    class="absolute top-2 right-2 rounded-lg bg-blue-500 text-white font-bold px-3 py-2 text-xs hover:bg-blue-600 cursor-pointer">Kopírovať</button>
+            </div>
+
+            <h3 class="font-bold mt-12 mb-6 text-center text-2xl">Náhľad</h3>
+        </div>
+
+        <div id="preview-box" class="mx-auto pb-48">
+            <iframe id="iframe-preview" class="w-full border rounded-lg" height="700"></iframe>
+        </div>
     </main>
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.0/dist/alpine.min.js"></script>
-    <script>sessionStorage.setItem("kk-visited_now", true); // Prevent later autoredirect from index.html</script>
+    <script>
+        const choice = { school: 'any', science: 'any', width: '1000' }
+        const organizer = document.getElementById('organizer')
+        const search = document.getElementById('search')
+        const code = document.getElementById('iframe-code')
+        const preview = document.getElementById('iframe-preview')
+        let preview_timer = 0
+
+        const update = () => {
+            for (const pill of document.querySelectorAll('[data-selected]')) {
+                const selected = choice[pill.dataset.choice] === pill.dataset.value
+                for (const cls of pill.dataset.selected.split(' ')) pill.classList.toggle(cls, selected)
+            }
+            document.getElementById('ical-url').textContent = `https://ical.kockatykalendar.sk/${choice.school}/${choice.science}.ics`
+
+            const params = new URLSearchParams()
+            const organizers = organizer.value.normalize('NFD').toLowerCase().replace(/[^a-z,]/g, '').split(',').filter(Boolean).join(',')
+            if (organizers) params.set('organizers', organizers)
+            if (choice.science !== 'any') params.set('sciences', choice.science)
+            if (choice.school !== 'any') params.set('school', choice.school)
+            if (search.value.trim()) params.set('search', search.value.trim())
+            const query = params.toString() ? '?' + params : ''
+            code.textContent = `<iframe src="https://kockatykalendar.sk/terminy.html${query}" style="width: 100%; max-width: ${choice.width}px; height: 700px; border: 0" loading="lazy"></iframe>`
+            document.getElementById('preview-box').style.maxWidth = choice.width + 'px'
+
+            // The preview uses this site's own terminy.html; reloading waits until typing stops
+            clearTimeout(preview_timer)
+            preview_timer = setTimeout(() => {
+                if (preview.getAttribute('src') !== 'terminy.html' + query) preview.src = 'terminy.html' + query
+            }, 500)
+        }
+
+        for (const pill of document.querySelectorAll('[data-selected]')) {
+            pill.addEventListener('click', () => {
+                choice[pill.dataset.choice] = pill.dataset.value
+                update()
+            })
+        }
+        organizer.addEventListener('input', update)
+        search.addEventListener('input', update)
+
+        const copy = document.getElementById('copy')
+        copy.addEventListener('click', () => navigator.clipboard.writeText(code.textContent).then(() => {
+            copy.textContent = 'Skopírované'
+            setTimeout(() => copy.textContent = 'Kopírovať', 2000)
+        }))
+
+        fetch('https://data.kockatykalendar.sk/organizers.json').then(response => response.json()).then(organizers => {
+            for (const [key, org] of Object.entries(organizers)) document.getElementById('kk-organizers').append(new Option(org.name, key))
+        })
+
+        update()
+    </script>
+    <script>sessionStorage.setItem("kk-visited_now", true); // Prevent later autoredirect from index.html to terminy.html</script>
 </body>
 </html>
