@@ -502,6 +502,7 @@ const add_description_toggle_listeners = (min_index, max_index) => {
     if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_MOBILE)) node.querySelector(".js-event-description-mobile")?.classList.add("hidden")
 
     node.addEventListener('click', (e) => {
+      follow_touched_event(visible_events[node.id.slice('event-item-'.length)])  // taps only; drags don't fire click
       if (e.target.closest('a')) return
       if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_PC)) node.querySelector(".js-event-description-pc")?.classList.toggle("hidden")
       if (!FILTER.style?.includes(FORCE_DESCRIPTION_VISIBLE_MOBILE)) node.querySelector(".js-event-description-mobile")?.classList.toggle("hidden")
