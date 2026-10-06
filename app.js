@@ -209,6 +209,9 @@ const load_data = async () => {
 
 const get_representative_date = (event) => {
   if (!event.date.end) return event.date.start
+  if (event.type == "seminar") return event.date.end
+  if (event.type == "sustredenie" || event.type == "tabor" || event.type == "vikendovka" || event.type == "prednasky") return event.date.start
+  // olympiada (end pre dlhé kolá, start pre napr. celoštátka), súťaž (podobne), other
   if (new Date(event.date.end).getTime() - new Date(event.date.start).getTime() <= ONE_DAY * 13) return event.date.start
   return event.date.end
 }
@@ -377,12 +380,7 @@ const fmt = {
 	is_active: function (event) {
 		if (event.cancelled) return false
 		return new Date(event.date.start).getTime() <= new Date().getTime() && new Date().getTime() < new Date(event.date.end ?? event.date.start).getTime() + ONE_DAY
-  },
-
-  // Not used
-  // is_future: function (event) {
-  //   return new Date(event.date.start).getTime() > new Date().getTime()
-  // }
+  }
 }
 
 const EVENT_TEMPLATE = document.getElementById('template-main').innerHTML;
