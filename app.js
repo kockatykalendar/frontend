@@ -457,13 +457,9 @@ const filter_events = (events) => {
 
 	// Country filter
 	events = events.filter((event) => {
-		for (let i = FILTER.countries.length - 1; i >= 0; i--) {
-			for (let j = event.organizers.length - 1; j >= 0; j--){
-        if (ORGANIZERS[event.organizers[j]].country == FILTER.countries[i]) return true
-        if (ORGANIZERS[event.organizers[j]].country == CONSTANTS.any_country_flag) return true
-			}
-		}
-		return false
+		// countries_override (a list) replaces the organizers' countries; same values, including any_country_flag
+		const countries = event.countries_override ?? event.organizers.map(o => ORGANIZERS[o].country)
+		return FILTER.countries.length > 0 && countries.some(c => c == CONSTANTS.any_country_flag || FILTER.countries.includes(c))
 	})
 
 	// Type filter
