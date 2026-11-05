@@ -457,8 +457,8 @@ const filter_events = (events) => {
 
 	// Country filter
 	events = events.filter((event) => {
-		// countries_override (a list) replaces the organizers' countries; same values, including any_country_flag
-		const countries = event.countries_override ?? event.organizers.map(o => ORGANIZERS[o].country)
+		// country_override (one value or a list) replaces the organizers' countries; same values, including any_country_flag
+		const countries = event.country_override ? [event.country_override].flat() : event.organizers.map(o => ORGANIZERS[o].country)
 		return FILTER.countries.length > 0 && countries.some(c => c == CONSTANTS.any_country_flag || FILTER.countries.includes(c))
 	})
 
