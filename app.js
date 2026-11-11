@@ -423,7 +423,20 @@ let first_id = 0
 let last_id = 0
 
 const normalize_string = (str) => { // Remove diacritics and special chars and turn lowercase; used in the search; part from https://stackoverflow.com/a/37511463
-   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();}
+   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9.,;/]/g, "").toLowerCase();
+}
+
+const get_all_date_strings_from_interval = (start, end) => {
+  const startDate = new Date(start);
+  const endDate = new Date(end || start);
+  const dates = [];
+  for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+    dates.push(d.getDate() + '.' + CONSTANTS.months[d.getMonth()] + '.' + d.getFullYear());
+    dates.push(d.getDate() + '.' + (d.getMonth() + 1) + '.' + d.getFullYear());
+    dates.push(d.toLocaleDateString());
+  }
+  return dates;
+}
 
 const filter_events = (events) => {
 	// School filter
@@ -470,10 +483,11 @@ const filter_events = (events) => {
 		return false
 	})
 
-	// Filter search
-	events = events.filter(x => normalize_string(JSON.stringify(x)).includes(normalize_string(document.getElementById('search-input').value)))
-	// Filter search -- mobile
-	events = events.filter(x => normalize_string(JSON.stringify(x)).includes(normalize_string(document.getElementById('mobile-search-input').value)))
+  // Filter search
+  let search_value = normalize_string(document.getElementById('search-input').value || document.getElementById('mobile-search-input').value)
+  events = events.filter(x => normalize_string(
+    x.name + ';' + x.info + ';' + x.organizers.join(';') + ';' + (x.places ? x.places.join(';') : '') + ';' + get_all_date_strings_from_interval(x.date.start, x.date.end).join(';')
+  ).includes(search_value))
 	return events
 }
 
